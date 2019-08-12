@@ -13,33 +13,49 @@ def new_module(name):
     return types.ModuleType(name)
 
 
-# not spaghetti
-def importer(name,*argv,**kw):
+def importer(name, *argv, **kw):
     global __import__
     try:
-        return __import__(name,*argv)
+        return __import__(name, *argv)
     except ImportError:
         pass
 
     file = ':{0}.py'.format(name)
-    print("INFO: getting online version of",file)
+    print("INFO: getting online local version of", file)
     # todo open the file via open() or raise importerror
     try:
-        code = open(file,'r').read()
+        code = open(file, 'r').read()
     except:
-        raise ImportError('module not found')
+        remote = False
+        for i, path_url in enumerate(sys.path):
+            print(i, path_url)
+            if path_url.startswith('http://') or path_url.startswith('https://'):
+                file = '{0}/{1}.py'.format(path_url, name)
+                print("INFO: try to get online remote version of", file)
+                try:
+                    code = open(file, 'r').read()
+                    remote = True
+                    break
+                except:
+                    continue
+        else:
+            raise ImportError('module not found')
 
-    #build a empty module
+    # build a empty module
     mod = types.ModuleType(name)
 
     mod.__file__ = file
 
     # compile module from cached file
     try:
-        code = compile( code, file, 'exec')
+        code = compile(code, file, 'exec')
     except Exception as e:
         sys.print_exception(e)
         raise
+
+    # micropython would insert module before executing the whole body
+    # and left it that way even on runtime error.
+    sys.modules[name] = mod
 
     # execute it in its own empty namespace.
     try:
@@ -48,17 +64,16 @@ def importer(name,*argv,**kw):
         print("WARNING: this python implementation lacks vars()")
         ns = mod.__dict__
 
-
     try:
-        exec( code, ns, ns)
+        exec(code, ns, ns)
     except Exception as e:
         sys.print_exception(e)
+        # do not follow weird micropython behaviour and clean up zombie module
+        del sys.modules[name]
         raise
 
-    # though micropython would normally insert module before executing the whole body
-    # do it after.
-    sys.modules[name] = mod
     return mod
+
 
 # install hook
 builtins.__import__ = importer
