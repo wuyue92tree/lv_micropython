@@ -92,6 +92,74 @@
 				color: gray;
 				pointer-events: none;
 			}
+			/* Slider formatting 
+			* https://www.w3schools.com/howto/howto_js_rangeslider.asp
+			*/
+
+			.slider {
+			-webkit-appearance: none;
+			width: 100%;
+			height: 15px;
+			border-radius: 5px;   
+			background: #d3d3d3;
+			outline: none;
+			}
+
+			.slider::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 25px;
+			height: 25px;
+			border-radius: 50%; 
+			background: #337ab7;
+			cursor: pointer;
+			}
+
+			.slider::-moz-range-thumb {
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			background: #337ab7;
+			cursor: pointer;
+			}
+
+			/* https://stackoverflow.com/a/50492336/619493
+			*/
+
+			.sliderticks {
+			display: flex;
+			justify-content: space-between;
+			padding-left: 15px;
+			padding-right: 20px;
+			}
+
+			.sliderticks option {
+			position: relative;
+			display: flex;
+			justify-content: center;
+			text-align: center;
+			width: 1px;
+			background: #D3D3D3;
+			height: 10px;
+			line-height: 40px;
+			margin: 0 0 0.5em 0;
+			min-height: 0.5em;
+			}
+			#link {
+				max-width: 510px;
+				flex: 1;
+			}
+			#link[href=""] {
+				display: none;
+			}
+			.controls {
+				display: flex;
+				align-items: center;
+				align-content: center;
+			}
+			button {
+				margin: 4px;
+			}
 		</style>
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 		<script src="https://littlevgl.com/bootstrap/js/bootstrap.min.js"></script>
@@ -100,7 +168,9 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/3.14.5/xterm.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/3.14.5/addons/fit/fit.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js" integrity="sha256-S1J4GVHHDMiirir9qsXWc8ZWw74PHHafpsHp5PXtjTs=" crossorigin="anonymous"></script>
 		<script src="query.js"></script>
+		<script src="snippetbin.js"></script>
 	</head>
 	<body>
 		<div class="flex-container">
@@ -116,13 +186,21 @@
 			For examples, see the README for the MicroPython binding.
 		
 			<p></p>
-			<input type="button" disabled="disabled" id="run-button" value="Restart" onclick="runScript();"/>
-
-			<span>
-			<a id="share-link" data-toggle="tooltip" title="Right click to share" href="">Share current script</a>
-			</span>
-			<input type="url" data-toggle="tooltip" title="Paste a link to a script here" placeholder="Link to online script" id="online-script" oninput="new_external_link(this.value);"/>
-
+			<div class="controls">
+				<button type="button" class="btn btn-primary" disabled="disabled" id="run-button" onclick="runScript();"><i style="transform: scaleX(-1);" class="fas fa-redo-alt"></i> Restart</button>
+				<button type="button" class="btn btn-primary" id="save-button" onclick="save(event);"><i class="fas fa-save"></i> Save</button>
+				<a target="_blank" href="" id="link"></a>
+			</div>
+			<div>
+				<label for="history">Revision History</label>
+			</div>
+			<div>
+				<input class="slider" id="history" type="range" list="history_data" name="history" step="1"
+						min="0" max="0" value="0" onchange="load_revision(this.list.children[this.value].dataset['value'], false)"/>
+				<datalist class="sliderticks" id="history_data">
+					<option value="0"/>
+				</datalist>
+			</div>
 			</div>
 			<div id="editor">print("Hello world")</div>
 			<div class="display-objects">
@@ -141,11 +219,7 @@
 			var external_script_value = null;
 			var editor, iframe, online_script_input;
 			var script_passed = false;
-			function new_external_link(url) {
-				if(url.length > 0) {
-					processScriptArg(url, false);
-				}
-			}
+			var current_revision = null;
 			// Ctrl+L is mandatory ! need xterm.js 3.14+
 		    function xterm_helper(term, key) {
 				function ESC(data) {
@@ -203,29 +277,6 @@
 			}
 			document.onmouseup = forward_event;
 			function editor_change() {
-				var new_href;
-				$("#share-link").removeClass("disabled");
-				if(editor.getValue() != external_script_value) {
-					online_script_input.value = "";
-					var script_string = LZString.compressToEncodedURIComponent(editor.getValue());
-					$("#script-compressed").val(script_string);
-					new_href = update_query_string(window.location.href, "script_direct", script_string);
-					new_href = removeURLParameter(new_href, "script");
-					
-					if(new_href.length > 2000) {
-						$("#share-link").text("URL is too long to be shared");
-						new_href = "#";
-						$("#share-link").addClass("disabled");
-					} else
-						$("#share-link").text("Share custom script");
-				} else {
-					online_script_input.value = external_link;
-					new_href = update_query_string(window.location.href, "script", external_link);
-					new_href = removeURLParameter(new_href, "script_direct");
-					$("#share-link").text("Share linked script");
-				}
-				// Create a dummy element to parse the URI with
-				$("#share-link").attr("href", new_href);
 			}
 			function runScript() {
 				var $this = $("#run-button");
@@ -313,7 +364,8 @@
 				} else {
 					external_link = null;
 					// decompress LZString
-					editor.session.setValue(LZString.decompressFromEncodedURIComponent(url));
+					current_revision = url;
+					load_revision(current_revision, true);
 					script_passed_handler();
 				}
 				
@@ -339,6 +391,7 @@
 						$(e.target).tooltip('hide');
 					}, 5000);
 				});
+				clear_dirty();
 				/* Enable tooltips */
 				$('[data-toggle="tooltip"]').tooltip(); 
 
@@ -380,6 +433,10 @@
                                         term.write(text);
 				}, false);
 				editor.getSession().on('change', editor_change);
+				editor.on("input", function(e) {
+					if (editor_cmd) editor_cmd--;
+					else set_dirty();
+				});
 				editor.resize();
 				term.fit();
 				var script = getSearchArg("script");
