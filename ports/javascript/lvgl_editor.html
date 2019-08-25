@@ -160,6 +160,9 @@
 			button {
 				margin: 4px;
 			}
+			#save-button > * {
+				pointer-events: none;
+			}
 		</style>
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 		<script src="https://littlevgl.com/bootstrap/js/bootstrap.min.js"></script>
@@ -187,8 +190,8 @@
 		
 			<p></p>
 			<div class="controls">
-				<button type="button" class="btn btn-primary" disabled="disabled" id="run-button" onclick="runScript();"><i style="transform: scaleX(-1);" class="fas fa-redo-alt"></i> Restart</button>
-				<button type="button" class="btn btn-primary" id="save-button" onclick="save(event);"><i class="fas fa-save"></i> Save</button>
+				<button type="button" class="btn btn-primary" disabled="disabled" id="run-button" onclick="runScript();"><i style="transform: scaleX(-1);" class="fas fa-redo-alt"></i> <span>Restart</span></button>
+				<button type="button" class="btn btn-primary" id="save-button" onclick="save(event);"><i class="fas fa-save"></i> <span>Save</span></button>
 				<a target="_blank" href="" id="link"></a>
 			</div>
 			<div>
@@ -217,7 +220,7 @@
 		<script>
 			var external_link = null;
 			var external_script_value = null;
-			var editor, iframe, online_script_input;
+			var editor, iframe;
 			var script_passed = false;
 			var current_revision = null;
 			// Ctrl+L is mandatory ! need xterm.js 3.14+
@@ -321,7 +324,6 @@
 					var error_handler = function() {
 						if(prev_external_link != null) {
 							external_link = prev_external_link;
-							online_script_input.value = external_link;
 						}
 						if(request != null)
 							alert("Failed to load script due to error " + request.status + ": " + request.statusText + "\nThe contents of the external link box have been reverted.");
@@ -337,8 +339,6 @@
 					}
 
 					external_link = url;
-					if(online_script_input.value != external_link)
-						online_script_input.value = external_link;
 					// read text from URL location
 					request = new XMLHttpRequest();
 					console.log("GET " + url);
@@ -353,7 +353,6 @@
 								if(request.responseText === undefined)
 									return;
 								editor.session.getUndoManager().reset();
-								external_script_value = request.responseText;
 								editor.session.setValue(request.responseText, -1);
 								script_passed_handler();
 							} else {
@@ -401,7 +400,6 @@
 				var PythonMode = ace.require("ace/mode/python").Mode;
 				editor.session.setMode(new PythonMode());
 				iframe = document.getElementById("emscripten-iframe");
-				online_script_input = document.getElementById("online-script");
 				iframe.src = "about:blank";
 				iframe.contentWindow.location.href = iframe.src;
 				clear_iframe(iframe);

@@ -35,6 +35,7 @@ function load_revision(revision, update_history){
     current_revision = revision;
     editor_cmd++;
     editor.setValue(res.data.text); 
+    editor.session.selection.clearSelection();
     if (update_history){
       let history = document.getElementById("history");
       let revision_history_data = document.getElementById("history_data");
@@ -61,15 +62,21 @@ function load_revision(revision, update_history){
 
 function save(event){
   event.target.disabled = true;
+  const span = event.target.childNodes[2];
+  span.textContent = 'Saving...';
+  const fin = () => {
+    span.textContent = 'Save';
+    event.target.disabled = false;
+  };
   axios.post(snippetbin_url + '/save_file', {
     "text": editor.getValue(),
     "original_revision": current_revision
   }).then(res=>{
     load_revision(res.data.revision, true);
-    event.target.disabled = false;
+    fin();
   }).catch(err=>{
     console.log('ERROR: ' + err.message);
-    event.target.disabled = false;
+    fin();
   });
 }
 
