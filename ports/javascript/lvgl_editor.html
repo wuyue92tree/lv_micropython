@@ -299,9 +299,12 @@
 				iframe.src = get_iframe_url() /*+ "&timestamp=" + new Date().getTime()*/;
 				iframe.contentWindow.location.href = iframe.src;
 				console.log("Iframe src: " + iframe.src);
+				term.setOption('disableStdin', true);
+				term.write('Loading...\r');
 			}
 			function reenableButton() {
 				$("#run-button").removeProp('disabled');
+				term.setOption('disableStdin', false);
 			}
 			function get_iframe_url() {
 				/* Assemble the URL */
