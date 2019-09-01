@@ -29,7 +29,7 @@ function cached_get(url){
   }
 }
 
-function load_revision(revision, update_history){
+function load_revision(revision, update_history, cb){
   if (!revision) return;
   cached_get(snippetbin_url + '/load_file/'+revision).then(res=>{
     current_revision = revision;
@@ -55,6 +55,8 @@ function load_revision(revision, update_history){
     link.setAttribute("href", update_query_string(window.location.href, query_revision, current_revision));
     link.textContent = "Link to online script";
     clear_dirty();
+    if(cb != undefined)
+      cb();
   }).catch(err=>{
     console.log(err);
   });

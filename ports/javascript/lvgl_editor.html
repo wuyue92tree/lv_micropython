@@ -28,7 +28,6 @@
 			}
 			#editor {
 				position: relative;
-				width: 100%;
 			}
 			iframe {
 				width: 0;
@@ -52,19 +51,14 @@
 			a { white-space: nowrap; }
 			.flex-container {
 				display: flex;
-				width: 100%;
-				height: 100%;
-				flex-direction: column;
-			}
-			.flex-container> div {
-				flex: none;
+				flex-direction: row;
 			}
 			#editor {
-				flex: auto;
+				flex: 1 1 50%;
 			}
 			.display-objects {
 				display: flex;
-				flex-direction: row;
+				flex-direction: column;
 			}
 			#mp_js_stdout_wrapper {
 				flex: 1 1 auto;
@@ -99,25 +93,28 @@
 			.slider {
 			-webkit-appearance: none;
 			width: 100%;
-			height: 15px;
+			height: 1em;
 			border-radius: 5px;   
 			background: #d3d3d3;
 			outline: none;
+			vertical-align: middle;
+			z-index: 1;
+			position: relative;
 			}
 
 			.slider::-webkit-slider-thumb {
 			-webkit-appearance: none;
 			appearance: none;
-			width: 25px;
-			height: 25px;
+			width: 0.6em;
+			height: 0.6em;
 			border-radius: 50%; 
 			background: #337ab7;
 			cursor: pointer;
 			}
 
 			.slider::-moz-range-thumb {
-			width: 25px;
-			height: 25px;
+			width: 1.5em;
+			height: 1.5em;
 			border-radius: 50%;
 			background: #337ab7;
 			cursor: pointer;
@@ -131,6 +128,11 @@
 			justify-content: space-between;
 			padding-left: 15px;
 			padding-right: 20px;
+			width: 100%;
+			position: absolute;
+			top: 1em;
+			left: 0;
+			z-index: 0;
 			}
 
 			.sliderticks option {
@@ -138,30 +140,70 @@
 			display: flex;
 			justify-content: center;
 			text-align: center;
-			width: 1px;
+			width: 0.1em;
 			background: #D3D3D3;
-			height: 10px;
-			line-height: 40px;
+			height: 0.3em;
 			margin: 0 0 0.5em 0;
-			min-height: 0.5em;
 			}
 			#link {
 				max-width: 510px;
-				flex: 1;
 			}
 			#link[href=""] {
 				display: none;
 			}
 			.controls {
-				display: flex;
+				display: inline-flex;
 				align-items: center;
 				align-content: center;
+				height: 100%;
+				margin: 0 1em;
+			}
+			.no-iframe {
+				flex: 1 1 33.3%;
 			}
 			button {
 				margin: 4px;
 			}
 			#save-button > * {
 				pointer-events: none;
+			}
+			.header-container {
+				display: flex;
+				width: 100%;
+				height: 100%;
+				flex-direction: column;
+			}
+			.lvgl-header {
+				flex: 0 0 auto;
+				height: 3.5em;
+			}
+			.flex-container {
+				flex: 1 1 auto;
+			}
+			.slider-container {
+				height: 1.5em;
+				position: relative;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+			}
+			.modal {
+				text-align: center;
+			}
+
+			@media screen and (min-width: 768px) { 
+				.modal:before {
+					display: inline-block;
+					vertical-align: middle;
+					content: " ";
+					height: 100%;
+				}
+			}
+
+			.modal-dialog {
+			display: inline-block;
+			text-align: left;
+			vertical-align: middle;
 			}
 		</style>
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -176,43 +218,67 @@
 		<script src="snippetbin.js"></script>
 	</head>
 	<body>
-		<div class="flex-container">
-			<div style="display: inline-block; padding: 10px;" class="no-iframe">
-			<h1>LittlevGL+MicroPython simulator</h1>
-			<p></p>
-			This is the JavaScript version of MicroPython, plus the LittlevGL bindings available at
-			<a href="https://github.com/littlevgl/lv_binding_micropython">https://github.com/littlevgl/lv_binding_micropython</a>.
-			<br>
-			You can type your own Python code into the prompt in the usual way, or by using the editor. When you want to run your
-			customized script, click Restart.
-			<br>
-			For examples, see the README for the MicroPython binding.
-		
-			<p></p>
-			<div class="controls">
-				<button type="button" class="btn btn-primary" disabled="disabled" id="run-button" onclick="runScript();"><i style="transform: scaleX(-1);" class="fas fa-redo-alt"></i> <span>Restart</span></button>
-				<button type="button" class="btn btn-primary" id="save-button" onclick="save(event);"><i class="fas fa-save"></i> <span>Save</span></button>
-				<a target="_blank" href="" id="link"></a>
+		<!-- The modal -->
+		<div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="modalLabel">About the simulator</h4>
+					</div>
+					<div class="modal-body">
+						This is the JavaScript version of MicroPython, plus the <a href="https://github.com/littlevgl/lv_binding_micropython">LittlevGL bindings for MicroPython</a>.
+						<p></p>
+						You can type your own Python code into the prompt in the usual way, or by using the editor. When you want to run your customized script, click Restart. 
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
 			</div>
-			<div>
-				<label for="history">Revision History</label>
-			</div>
-			<div>
-				<input class="slider" id="history" type="range" list="history_data" name="history" step="1"
-						min="0" max="0" value="0" onchange="load_revision(this.list.children[this.value].dataset['value'], false)"/>
-				<datalist class="sliderticks" id="history_data">
-					<option value="0"/>
-				</datalist>
-			</div>
-			</div>
-			<div id="editor">print("Hello world")</div>
-			<div class="display-objects">
-				
-				<canvas id="canvas" data-toggle="tooltip" title="This is the virtual LittlevGL screen" width="480" height="320" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
-                                <div id="mp_js_stdout_wrapper">
-                                        <div id="mp_js_stdout"></div>
-                                </div>
-                                
+		</div>
+		<div class="header-container">
+			<nav class="lvgl-header navbar navbar-default">
+				<div class="container-fluid" style="height: 100%;">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<span class="navbar-brand">LittlevGL/MicroPython simulator</span>
+					</div>
+					<div class="controls navbar-left">
+						<button type="button" class="btn btn-primary" disabled="disabled" id="run-button" onclick="runScript();"><i style="transform: scaleX(-1);" class="fas fa-redo-alt"></i> <span>Restart</span></button>
+						<button type="button" class="btn btn-primary" id="save-button" onclick="save(event);"><i class="fas fa-save"></i> <span>Save</span></button>
+						<a target="_blank" href="" id="link"></a>
+					</div>
+					<div class="controls navbar-right">
+						<div style="display: inline-flex; justify-content: center; align-items: center; height: 100%;">
+							<span style="font-weight: 700;">Revision History</span>
+							<div class="slider-container">
+								<input class="slider" id="history" type="range" list="history_data" name="history" step="1"
+										min="0" max="0" value="0" onchange="load_revision(this.list.children[this.value].dataset['value'], false)"/>
+								<datalist class="sliderticks" id="history_data">
+									<option value="0"/>
+								</datalist>
+							</div>
+						</div>
+						<ul class="nav navbar-nav">
+							<li><a target="_blank" href="https://github.com/littlevgl/lv_binding_micropython/tree/master/examples">Examples</a></li>
+							<li><a href="#" role="button" data-toggle="modal" data-target="#about-modal">Help</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+			<div class="flex-container">
+				<div id="editor">print("Hello world")</div>
+				<div class="display-objects">
+					
+					<canvas id="canvas" data-toggle="tooltip" title="This is the virtual LittlevGL screen" width="480" height="320" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+									<div id="mp_js_stdout_wrapper">
+											<div id="mp_js_stdout"></div>
+									</div>
+									
+				</div>
 			</div>
 		</div>
 		<iframe src="about:blank" id="emscripten-iframe"></iframe>
@@ -220,7 +286,7 @@
 		<script>
 			var external_link = null;
 			var external_script_value = null;
-			var editor, iframe;
+			var editor, iframe, term;
 			var script_passed = false;
 			var current_revision = null;
 			// Ctrl+L is mandatory ! need xterm.js 3.14+
@@ -292,7 +358,6 @@
 				context.clearRect(0, 0, canvas.width, canvas.height);
 
 
-				
 				iframe.setAttribute("data-cscript", LZString.compressToEncodedURIComponent(editor.getValue()));
 
 				clear_iframe(iframe);
@@ -304,7 +369,8 @@
 			}
 			function reenableButton() {
 				$("#run-button").removeProp('disabled');
-				term.setOption('disableStdin', false);
+				if(term != undefined && term != null)
+					term.setOption('disableStdin', false);
 			}
 			function get_iframe_url() {
 				/* Assemble the URL */
@@ -367,8 +433,9 @@
 					external_link = null;
 					// decompress LZString
 					current_revision = url;
-					load_revision(current_revision, true);
-					script_passed_handler();
+					load_revision(current_revision, true, function() {
+						script_passed_handler();
+					});
 				}
 				
 			}
