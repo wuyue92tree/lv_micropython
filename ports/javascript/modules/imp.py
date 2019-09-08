@@ -21,7 +21,7 @@ def importer(name, *argv, **kw):
         pass
 
     file = ':{0}.py'.format(name)
-    print("INFO: getting online local version of", file)
+#    print("INFO: getting online local version of", file)
     # todo open the file via open() or raise importerror
     try:
         code = open(file, 'r').read()
@@ -31,7 +31,7 @@ def importer(name, *argv, **kw):
             print(i, path_url)
             if path_url.startswith('http://') or path_url.startswith('https://'):
                 file = '{0}/{1}.py'.format(path_url, name)
-                print("INFO: try to get online remote version of", file)
+#                print("INFO: try to get online remote version of", file)
                 try:
                     code = open(file, 'r').read()
                     remote = True
@@ -61,7 +61,7 @@ def importer(name, *argv, **kw):
     try:
         ns = vars(mod)
     except:
-        print("WARNING: this python implementation lacks vars()")
+#        print("WARNING: this python implementation lacks vars()")
         ns = mod.__dict__
 
     try:
@@ -77,4 +77,4 @@ def importer(name, *argv, **kw):
 
 # install hook
 builtins.__import__ = importer
-print("__import__ is now", importer)
+# print("__import__ is now", importer)
