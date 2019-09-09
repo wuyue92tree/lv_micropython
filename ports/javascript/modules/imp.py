@@ -20,18 +20,17 @@ def importer(name, *argv, **kw):
     except ImportError:
         pass
 
-    file = ':{0}.py'.format(name)
-#    print("INFO: getting online local version of", file)
+    filen = ':{0}.py'.format(name)
+    print("INFO: getting online local version of", filen, file=sys.stderr)
     # todo open the file via open() or raise importerror
     try:
-        code = open(file, 'r').read()
+        code = open(filen, 'r').read()
     except:
         remote = False
         for i, path_url in enumerate(sys.path):
-            print(i, path_url)
             if path_url.startswith('http://') or path_url.startswith('https://'):
                 file = '{0}/{1}.py'.format(path_url, name)
-#                print("INFO: try to get online remote version of", file)
+                print("INFO: try to get online remote version of", filen, file=sys.stderr)
                 try:
                     code = open(file, 'r').read()
                     remote = True
@@ -61,7 +60,7 @@ def importer(name, *argv, **kw):
     try:
         ns = vars(mod)
     except:
-#        print("WARNING: this python implementation lacks vars()")
+        print("WARNING: this python implementation lacks vars()", file=sys.stderr)
         ns = mod.__dict__
 
     try:
