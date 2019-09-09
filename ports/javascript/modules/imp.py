@@ -29,10 +29,10 @@ def importer(name, *argv, **kw):
         remote = False
         for i, path_url in enumerate(sys.path):
             if path_url.startswith('http://') or path_url.startswith('https://'):
-                file = '{0}/{1}.py'.format(path_url, name)
+                filen = '{0}/{1}.py'.format(path_url, name)
                 print("INFO: try to get online remote version of", filen, file=sys.stderr)
                 try:
-                    code = open(file, 'r').read()
+                    code = open(filen, 'r').read()
                     remote = True
                     break
                 except:
@@ -43,11 +43,11 @@ def importer(name, *argv, **kw):
     # build a empty module
     mod = types.ModuleType(name)
 
-    mod.__file__ = file
+    mod.__file__ = filen
 
     # compile module from cached file
     try:
-        code = compile(code, file, 'exec')
+        code = compile(code, filen, 'exec')
     except Exception as e:
         sys.print_exception(e)
         raise
