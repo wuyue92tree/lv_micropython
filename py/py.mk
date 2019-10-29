@@ -13,8 +13,10 @@ ifneq ($(QSTR_AUTOGEN_DISABLE),1)
 QSTR_DEFS_COLLECTED = $(HEADER_BUILD)/qstrdefs.collected.h
 endif
 
-# Any files listed by this variable will cause a full regeneration of qstrs
+# Any files listed by these variables will cause a full regeneration of qstrs
+# DEPENDENCIES: included in qstr processing; REQUIREMENTS: not included
 QSTR_GLOBAL_DEPENDENCIES += $(PY_SRC)/mpconfig.h mpconfigport.h
+QSTR_GLOBAL_REQUIREMENTS += $(HEADER_BUILD)/mpversion.h
 
 # some code is performance bottleneck and compiled with other optimization options
 CSUPEROPT = -O3
@@ -27,6 +29,7 @@ INC += -I$(LVGL_BINDING_DIR)
 ALL_LVGL_SRC = $(shell find $(LVGL_DIR) -type f) $(LVGL_BINDING_DIR)/lv_conf.h
 LVGL_PP = $(BUILD)/lvgl/lvgl.pp.c
 LVGL_MPY = $(BUILD)/lvgl/lv_mpy.c
+LVGL_MPY_METADATA = $(BUILD)/lvgl/lv_mpy.json
 QSTR_GLOBAL_DEPENDENCIES += $(LVGL_MPY)
 CFLAGS_MOD += $(LV_CFLAGS) 
 
@@ -34,16 +37,16 @@ $(LVGL_MPY): $(ALL_LVGL_SRC) $(LVGL_BINDING_DIR)/gen/gen_mpy.py
 	$(ECHO) "LVGL-GEN $@"
 	$(Q)mkdir -p $(dir $@)
 	$(Q)$(CPP) $(LV_CFLAGS) -I $(LVGL_BINDING_DIR)/pycparser/utils/fake_libc_include $(INC) $(LVGL_DIR)/lvgl.h > $(LVGL_PP)
-	$(Q)$(PYTHON) $(LVGL_BINDING_DIR)/gen/gen_mpy.py -M lvgl -MP lv -E $(LVGL_PP) $(LVGL_DIR)/lvgl.h > $@
+	$(Q)$(PYTHON) $(LVGL_BINDING_DIR)/gen/gen_mpy.py -M lvgl -MP lv -MD $(LVGL_MPY_METADATA) -E $(LVGL_PP) $(LVGL_DIR)/lvgl.h > $@
 
 CFLAGS_MOD += -Wno-unused-function
 SRC_MOD += $(subst $(TOP)/,,$(shell find $(LVGL_DIR)/src $(LVGL_GENERIC_DRV_DIR) -type f -name "*.c") $(LVGL_MPY))
 
 # External modules written in C.
 ifneq ($(USER_C_MODULES),)
-# pre-define USERMOD variables as expanded so that variables are immediate 
+# pre-define USERMOD variables as expanded so that variables are immediate
 # expanded as they're added to them
-SRC_USERMOD := 
+SRC_USERMOD :=
 CFLAGS_USERMOD :=
 LDFLAGS_USERMOD :=
 $(foreach module, $(wildcard $(USER_C_MODULES)/*/micropython.mk), \
@@ -126,6 +129,7 @@ PY_CORE_O_BASENAME = $(addprefix py/,\
 	stackctrl.o \
 	argcheck.o \
 	warning.o \
+	profile.o \
 	map.o \
 	obj.o \
 	objarray.o \
