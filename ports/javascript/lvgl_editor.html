@@ -350,6 +350,10 @@
 					script_passed = false;
 				};
 				if(!lzstring) {
+					// if url is a single url we convert it to array
+					if(!Array.isArray(url)){
+						url = [{"url": url}];
+					}
 					var prev_external_link = external_link;
 					var request = null;
 
@@ -364,34 +368,52 @@
 					};
 
 					try {
-						new URL(url);
+						url.forEach(e=>{
+							new URL(e.url);
+						});
 					} catch(e) {
 						error_handler();
 						return;
 					}
 
-					external_link = url;
+					// last url is probably the important one
+					external_link = url[url.length-1].url;
 					// read text from URL location
-					request = new XMLHttpRequest();
-					console.log("GET " + url);
-					request.overrideMimeType("text/plain");
-					request.open('GET', url, true);
-					request.send(null);
-					request.onerror = error_handler;
-					request.onreadystatechange = function () {
-						if (request.readyState === 4) {
-							if(request.status == 200) {
-								console.log(request.reponseText);
-								if(request.responseText === undefined)
-									return;
-								editor.session.getUndoManager().reset();
-								editor.session.setValue(request.responseText, -1);
-								script_passed_handler();
-							} else {
-								error_handler();
+					url.forEach(e=>{
+						let request = new XMLHttpRequest();
+						console.log("GET " + e.url);
+						request.overrideMimeType("text/plain");
+						request.open('GET', e.url, true);
+						request.send(null);
+						request.onerror = error_handler;
+						request.onreadystatechange = function () {
+							if (request.readyState === 4) {
+								if(request.status == 200) {
+									console.log(request.reponseText);
+									if(request.responseText === undefined)
+										return;
+									e.content = request.responseText;
+									// check if all of them have content
+									total = url.reduce((total, el) => total+("content" in el) ,0);
+									console.log(total+" of "+url.length+" loaded");
+									if(total==url.length){
+										final_script = "";
+										url.forEach(e=>{
+											if("comment" in e){
+												final_script += "##### "+e.comment+" #####\n\n";
+											}
+											final_script += e.content + "\n\n";
+										})
+										editor.session.getUndoManager().reset();
+										editor.session.setValue(final_script, -1);
+										script_passed_handler();
+									}
+								} else {
+									error_handler();
+								}
 							}
 						}
-					}
+					});
 				} else {
 					external_link = null;
 					// decompress LZString
@@ -472,9 +494,29 @@
 				term.fit();
 				var script = getSearchArg("script");
 				var script_direct = getSearchArg("script_direct");
+				var script_startup = getSearchArg("script_startup");
 				if(script_direct !== undefined && script_direct !== null) {
 					script_passed = true;
 					processScriptArg(script_direct, true);
+				} else if(script_startup !== undefined && script_startup !== null) {
+					// both startup script and normal script are passed
+					if(script !== undefined && script !== null) {
+						script_passed = true;
+						// pass an array of objects
+						processScriptArg([
+							{
+								"comment": "startup script",
+								"url": script_startup
+							},
+							{
+								"comment": "main script",
+								"url": script
+							}
+						]);
+					}else{
+						script_passed = true;
+						processScriptArg(script_startup);
+					}
 				} else if(script !== undefined && script !== null) {
 					script_passed = true;
 					processScriptArg(script);
