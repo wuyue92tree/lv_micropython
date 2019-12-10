@@ -94,6 +94,7 @@ SRC_C = \
 	main.c \
 	mphalport.c \
 	modutime.c \
+	lv_font_heb_16.c \
 
 ifdef WASM_FILE_API
 	SRC_C += file.c wasm_file_api.c
