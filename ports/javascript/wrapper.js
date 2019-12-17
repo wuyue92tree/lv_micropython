@@ -26,6 +26,17 @@
 
 var Module = {};
 
+Module['print'] = function(text) {
+    if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+    var mp_js_stdout = window.top.document.getElementById('mp_js_stdout');
+    var print = new Event('print');
+    print.data = text + "\r\n";
+    mp_js_stdout.dispatchEvent(print);
+}
+Module['printErr'] = function(text) {
+    if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+    console.error(text);
+}
 var mainProgram = function()
 {
   mp_js_init = Module.cwrap('mp_js_init', 'null', ['number']);
