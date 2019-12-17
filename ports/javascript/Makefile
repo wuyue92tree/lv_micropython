@@ -1,6 +1,9 @@
 # customizations for lvgl
 WASM_FILE_API = 1
 FROZEN_DIR ?= modules
+
+LV_CFLAGS:= -DLV_FONT_CUSTOM_DECLARE="LV_FONT_DECLARE(lv_font_heb_16)"
+
 include ../../py/mkenv.mk
 
 CROSS = 0
@@ -21,7 +24,6 @@ INC += -I$(BUILD)
 LDFLAGS ?= -m32 -Wl,--gc-sections
 CFLAGS ?= -m32
 
-LV_CFLAGS:= -DLV_FONT_CUSTOM_DECLARE="LV_FONT_DECLARE(lv_font_heb_16)"
 #default debug options for browser debugger
 JSFLAGS ?= --source-map-base http://localhost:8000
 
