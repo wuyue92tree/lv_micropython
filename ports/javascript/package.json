@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "clean": "rm -rf bundle_out/*",
+    "clean": "rm -rf bundle_out/* && ./build_workers.sh",
     "bundle": "parcel build frontend.html -o index.html -d bundle_out --no-source-maps --public-url ./",
     "dev": "parcel frontend.html -o index.html -d bundle_out --no-source-maps --public-url ./",
     "build:wasm": "make -j4"
