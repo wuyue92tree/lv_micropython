@@ -437,7 +437,7 @@ $(window).load(function() {
             cursorStyle : 'block',
             applicationCursor : true
     });
-    mp_js_stdout = document.getElementById('mp_js_stdout');
+    var mp_js_stdout = document.getElementById('mp_js_stdout');
     mp_js_stdout.value = "";
     term.open(mp_js_stdout);
     term.fit();
