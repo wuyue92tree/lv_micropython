@@ -5,7 +5,8 @@
 		<meta charset="utf-8">
 		
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
-		<link rel="stylesheet" href="https://littlevgl.com/bootstrap/css/bootstrap.min.css"/>
+		
+		<link rel="stylesheet" href="https://lvgl.io/assets/bootstrap/css/bootstrap.min.css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/xterm/3.14.4/xterm.min.css" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"/>
 		<title>LittlevGL/MicroPython Simulator</title>
@@ -169,7 +170,8 @@
 			}
 		</style>
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-		<script src="https://littlevgl.com/bootstrap/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.0/umd/popper.min.js"></script>
+		<script src="https://lvgl.io/assets/bootstrap/js/bootstrap.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/3.14.5/xterm.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/3.14.5/addons/fit/fit.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.js" type="text/javascript" charset="utf-8"></script>
@@ -199,7 +201,7 @@
 			</div>
 		</div>
 		<div class="header-container">
-			<nav class="lvgl-header navbar navbar-default">
+			<nav class="lvgl-header navbar navbar-dark bg-dark">
 				<div class="container-fluid" style="height: 100%;">
 					<!-- Brand and toggle get grouped for better mobile display -->
 					<div class="navbar-header">
@@ -212,7 +214,7 @@
 					</div>
 					<div class="controls navbar-right">
 						<div style="display: inline-flex; justify-content: center; align-items: center; height: 100%;">
-							<span style="font-weight: 700;">Revision History</span>
+							<span style="font-weight: 400; color: white;">Revision History</span>
 							<div class="slider-container">
 								<input class="slider" id="history" type="range" list="history_data" name="history" step="1"
 										min="0" max="0" value="0" onchange="load_revision(this.list.children[this.value].dataset['value'], false)"/>
@@ -232,7 +234,7 @@
 				<div id="editor">print("Hello world")</div>
 				<div class="display-objects">
 					
-					<canvas id="canvas" data-toggle="tooltip" title="This is the virtual LittlevGL screen" width="480" height="320" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+					<canvas id="canvas" title="This is the virtual LittlevGL screen" width="480" height="320" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
 									<div id="mp_js_stdout_wrapper">
 											<div id="mp_js_stdout"></div>
 									</div>
