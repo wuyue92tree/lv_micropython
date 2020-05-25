@@ -21,8 +21,6 @@
 // emitters
 #define MICROPY_PERSISTENT_CODE_LOAD        (1)
 #define MICROPY_EMIT_XTENSAWIN              (1)
-void *esp_native_code_commit(void*, size_t);
-#define MP_PLAT_COMMIT_EXEC(buf, len) esp_native_code_commit(buf, len)
 
 // compiler configuration
 #define MICROPY_COMP_MODULE_CONST           (1)
@@ -166,7 +164,7 @@ void *esp_native_code_commit(void*, size_t);
 
 #define MICROPY_PY_LVGL                     (1)
 #define MICROPY_PY_ESPIDF                   (1)
-#define MICROPY_PY_LODEPNG                  (0)
+#define MICROPY_PY_LODEPNG                  (1)
 #define MICROPY_PY_RTCH                     (1)
 
 // fatfs configuration
@@ -210,6 +208,13 @@ extern const struct _mp_obj_module_t mp_module_lodepng;
     { MP_OBJ_NEW_QSTR(MP_QSTR_lvesp32), (mp_obj_t)&mp_module_lvesp32 },
 //    { MP_OBJ_NEW_QSTR(MP_QSTR_ILI9341), (mp_obj_t)&mp_module_ILI9341 },
 //    { MP_OBJ_NEW_QSTR(MP_QSTR_xpt2046), (mp_obj_t)&mp_module_xpt2046 },
+
+// lvesp needs to delete the timer task upon soft reset
+
+extern void lvesp_deinit();
+extern void lv_deinit(void);
+#define MICROPY_PORT_DEINIT_FUNC lvesp_deinit(); lv_deinit()
+
 #else
 #define MICROPY_PORT_LVGL_DEF
 #endif
@@ -277,6 +282,8 @@ struct mp_bluetooth_nimble_root_pointers_t;
 #define BYTES_PER_WORD (4)
 #define MICROPY_MAKE_POINTER_CALLABLE(p) ((void*)((mp_uint_t)(p)))
 #define MP_PLAT_PRINT_STRN(str, len) mp_hal_stdout_tx_strn_cooked(str, len)
+void *esp_native_code_commit(void*, size_t, void*);
+#define MP_PLAT_COMMIT_EXEC(buf, len, reloc) esp_native_code_commit(buf, len, reloc)
 #define MP_SSIZE_MAX (0x7fffffff)
 
 // Note: these "critical nested" macros do not ensure cross-CPU exclusion,
