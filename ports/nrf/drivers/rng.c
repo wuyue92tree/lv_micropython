@@ -3,8 +3,13 @@
  *
  * The MIT License (MIT)
  *
+<<<<<<< Updated upstream:ports/mimxrt/modutime.c
+ * Copyright (c) 2019 Damien P. George
+ * Copyright (c) 2020 Jim Mussared
+=======
  * Copyright (c) 2017-2018 Glenn Ruben Bakke
  * Copyright (c) 2018 Ayke van Laethem
+>>>>>>> Stashed changes:ports/nrf/drivers/rng.c
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +30,29 @@
  * THE SOFTWARE.
  */
 
+<<<<<<< Updated upstream:ports/mimxrt/modutime.c
+#include "extmod/utime_mphal.h"
+
+STATIC const mp_rom_map_elem_t time_module_globals_table[] = {
+    { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_utime) },
+
+    { MP_ROM_QSTR(MP_QSTR_sleep), MP_ROM_PTR(&mp_utime_sleep_obj) },
+    { MP_ROM_QSTR(MP_QSTR_sleep_ms), MP_ROM_PTR(&mp_utime_sleep_ms_obj) },
+    { MP_ROM_QSTR(MP_QSTR_sleep_us), MP_ROM_PTR(&mp_utime_sleep_us_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_ms), MP_ROM_PTR(&mp_utime_ticks_ms_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_us), MP_ROM_PTR(&mp_utime_ticks_us_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_cpu), MP_ROM_PTR(&mp_utime_ticks_cpu_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_add), MP_ROM_PTR(&mp_utime_ticks_add_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_diff), MP_ROM_PTR(&mp_utime_ticks_diff_obj) },
+};
+
+STATIC MP_DEFINE_CONST_DICT(time_module_globals, time_module_globals_table);
+
+const mp_obj_module_t mp_module_utime = {
+    .base = { &mp_type_module },
+    .globals = (mp_obj_dict_t *)&time_module_globals,
+};
+=======
 #include "py/mpconfig.h"
 
 #if MICROPY_HW_ENABLE_RNG
@@ -77,3 +105,4 @@ uint32_t rng_generate_random_word(void) {
 }
 
 #endif // MICROPY_HW_ENABLE_RNG
+>>>>>>> Stashed changes:ports/nrf/drivers/rng.c

@@ -2,7 +2,7 @@
 WASM_FILE_API = 1
 FROZEN_DIR ?= modules
 
-LV_CFLAGS:= -DLV_FONT_CUSTOM_DECLARE="LV_FONT_DECLARE(lv_font_heb_16)"
+#LV_CFLAGS:= -DLV_FONT_CUSTOM_DECLARE="LV_FONT_DECLARE(lv_font_heb_16)"
 
 include ../../py/mkenv.mk
 
@@ -21,11 +21,13 @@ INC += -I$(TOP)
 INC += -I$(BUILD)
 
 
-LDFLAGS ?= -m32 -Wl,--gc-sections
-CFLAGS ?= -m32
+#LDFLAGS ?= -m32 -Wl,--gc-sections
+#CFLAGS ?= -m32
 
 #default debug options for browser debugger
 JSFLAGS ?= --source-map-base http://localhost:8000
+CFLAGS = -m32 -Wall -Werror -Wno-error=missing-braces -Wdouble-promotion -Wfloat-conversion $(INC) -std=c99 $(COPT)
+LDFLAGS = -m32 -Wl,-Map=$@.map,--cref -Wl,--gc-sections
 
 #Debugging/Optimization
 ifeq ($(DEBUG), 1)
@@ -34,7 +36,6 @@ else
 CFLAGS += -Oz -g0 -DNDEBUG
 endif
 
-CFLAGS += -Wall -Werror $(INC) -std=gnu11 $(COPT)
 CFLAGS += -fdata-sections -ffunction-sections
 CFLAGS += $(CFLAGS_MOD)
 

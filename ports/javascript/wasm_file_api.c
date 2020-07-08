@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include "py/mpconfig.h"
