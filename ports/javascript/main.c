@@ -199,10 +199,10 @@ int mp_js_process_char(int c) {
 
 void mp_js_init(int heap_size) {
     int stack_dummy;
-    stack_top = (char*)&stack_dummy;
+    stack_top = (char *)&stack_dummy;
 
     #if MICROPY_ENABLE_GC
-    char *heap = (char*)malloc(heap_size * sizeof(char));
+    char *heap = (char *)malloc(heap_size * sizeof(char));
     gc_init(heap, heap + heap_size);
     #endif
 
@@ -230,7 +230,7 @@ void gc_collect(void) {
         longjmp(dummy, 1);
     }
     gc_collect_start();
-    gc_collect_root((void*)stack_top, ((mp_uint_t)(void*)(&dummy + 1) - (mp_uint_t)stack_top) / sizeof(mp_uint_t));
+    gc_collect_root((void *)stack_top, ((mp_uint_t)(void *)(&dummy + 1) - (mp_uint_t)stack_top) / sizeof(mp_uint_t));
     gc_collect_end();
 }
 
@@ -255,11 +255,15 @@ MP_DEFINE_CONST_FUN_OBJ_KW(mp_builtin_open_obj, 1, mp_builtin_open);
 #endif
 
 void nlr_jump_fail(void *val) {
-    while (1);
+    while (1) {
+        ;
+    }
 }
 
 void NORETURN __fatal_error(const char *msg) {
-    while (1);
+    while (1) {
+        ;
+    }
 }
 
 #ifndef NDEBUG
