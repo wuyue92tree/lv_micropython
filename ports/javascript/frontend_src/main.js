@@ -156,6 +156,8 @@ function load_revision(revision, update_history, cb){
   });
 }
 
+window.load_revision = load_revision;
+
 window.save = function(event){
   event.target.disabled = true;
   const span = event.target.childNodes[2];
@@ -168,7 +170,7 @@ window.save = function(event){
     "text": getEditorValue(),
     "original_revision": current_revision
   }).then(res=>{
-    load_revision(res.data.revision, true);
+    window.load_revision(res.data.revision, true);
     fin();
   }).catch(err=>{
     console.log('ERROR: ' + err.message);
@@ -376,7 +378,7 @@ function processScriptArg(url, lzstring){
         external_link = null;
         // decompress LZString
         current_revision = url;
-        load_revision(current_revision, true, function() {
+        window.load_revision(current_revision, true, function() {
             script_passed_handler();
         });
     }
