@@ -405,7 +405,23 @@ function setupPythonEditor() {
     editorDiv.textContent = '';
     
     editor = monaco.editor.create(editorDiv, {
-        value: 'print("hello world")',
+        value: `
+# Initialize 
+
+import imp, sys
+sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/master/lib')
+import display_driver
+import lvgl as lv
+
+# Create a button with a label 
+
+scr = lv.obj()
+btn = lv.btn(scr)
+btn.align(scr, lv.ALIGN.CENTER, 0, 0)
+label = lv.label(btn)
+label.set_text('Hello World!')
+lv.scr_load(scr)
+`,
         language: 'python',
         automaticLayout: false // the important part
     });
