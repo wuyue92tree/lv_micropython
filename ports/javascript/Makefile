@@ -26,8 +26,8 @@ INC += -I$(BUILD)
 
 #default debug options for browser debugger
 JSFLAGS ?= --source-map-base http://localhost:8000
-CFLAGS = -m32 -Wall -Werror -Wno-error=missing-braces -Wdouble-promotion -Wfloat-conversion $(INC) -std=c99 $(COPT)
-LDFLAGS = -m32 -Wl,-Map=$@.map,--cref -Wl,--gc-sections
+CFLAGS = -m32 -Wall -Werror -Wno-error=missing-braces -Wdouble-promotion -Wfloat-conversion $(INC) -std=gnu99 $(COPT)
+LDFLAGS = -m32 -Wl,--gc-sections
 
 #Debugging/Optimization
 ifeq ($(DEBUG), 1)
@@ -53,18 +53,11 @@ ifdef EMSCRIPTEN
 		CFLAGS += -s EMTERPRETIFY_SYNCLIST='["_mp_execute_bytecode"]' -s EMTERPRETIFY_ADVISE=1
 	endif
 
-	#check if not using emscripten-upstream branch
-	ifeq (,$(findstring upstream/bin, $(EMMAKEN_COMPILER)))
-		JSFLAGS += -s "BINARYEN_TRAP_MODE='clamp'"
-		LDFLAGS += -Wl,-Map=$@.map,--cref
-	endif  
-	
 	CC = emcc $(JSFLAGS)
 	LD = emcc $(JSFLAGS)
-	CPP = clang -E -undef -D__CPP__ -D__EMSCRIPTEN__ -U__STDC_VERSION__
-	CPP += --sysroot $(EMSCRIPTEN)/system
-	CPP += -include $(BUILD)/clang_predefs.h
-	CPP += $(addprefix -isystem, $(shell env LC_ALL=C $(CC) $(CFLAGS_EXTRA) -E -x c++ /dev/null -v 2>&1 |sed -e '/^\#include <...>/,/^End of search/{ //!b };d'))
+	CPP = emcc -x c -E -D__CPP__ -D__EMSCRIPTEN__
+#	CPP += --sysroot $(EMSCRIPTEN)/system
+#	CPP += $(addprefix -isystem, $(shell env LC_ALL=C $(CC) $(CFLAGS_EXTRA) -E -x c++ /dev/null -v 2>&1 |sed -e '/^\#include <...>/,/^End of search/{ //!b };d'))
 else
 	ifdef CLANG
 		CC=clang
@@ -119,20 +112,12 @@ endif
 
 SRC_C += $(SRC_MOD)
 
-SRC_QSTR += $(BUILD)/clang_predefs.h $(SRC_C) $(SRC_LIB) $(LIB_SRC_C)
+SRC_QSTR += $(SRC_C) $(SRC_LIB) $(LIB_SRC_C)
 
 OBJ = $(PY_O) 
 OBJ += $(addprefix $(BUILD)/, $(SRC_LIB:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(LIB_SRC_C:.c=.o))
-
-$(BUILD)/clang_predefs.h:
-	$(Q)mkdir -p $(dir $@)
-	$(Q)emcc $(CFLAGS) $(CFLAGS_EXTRA) $(JSFLAGS) -E -x c /dev/null -dM > $@
-
-# Create `clang_predefs.h` as soon as possible, using a Makefile trick
-
-Makefile: $(BUILD)/clang_predefs.h
 
 all: $(BUILD)/micropython.js
 

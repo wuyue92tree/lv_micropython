@@ -21,6 +21,13 @@
 	<script src="docs/wasm_file_api.js"></script>
     <script src="lvgl_mp.js"></script>
     <script>
+		var prevQuery = document.querySelector;
+		document.querySelector = function(selector) {
+			if(selector == "#canvas")
+				return window.top.document.getElementById('canvas');
+			else
+				return prevQuery(selector);
+		}
 		var mp_js_stdout;
 		/*Write text to the terminal */
 		function sendText(text) {
