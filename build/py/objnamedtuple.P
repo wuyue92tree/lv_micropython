@@ -1,0 +1,106 @@
+build/py/objnamedtuple.o: ../../py/objnamedtuple.c \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/compat/string.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/string.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/features.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/strings.h \
+  ../../py/objtuple.h ../../py/obj.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/assert.h \
+  ../../py/mpconfig.h mpconfigport.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/stdint.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/stdint.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_gc.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/stdbool.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_mem.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_kconfig.h \
+  ../../lib/lv_bindings/lv_conf.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/stddef.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_log.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_types.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_ll.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_task.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/lv_img_cache.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/lv_img_decoder.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_conf_internal.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/lv_img_buf.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_color.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_math.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_area.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_fs.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_types.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/lv_style.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/lv_font.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/../lv_conf_internal.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/lv_symbol_def.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/../lv_misc/lv_area.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_color.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_area.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_anim.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_types.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_debug.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_draw/lv_draw_blend.h \
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/lv_draw_mask.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/alloca.h \
+  ../../py/misc.h ../../py/qstr.h build/genhdr/qstrdefs.generated.h \
+  ../../py/mpprint.h ../../py/runtime0.h ../../py/runtime.h \
+  ../../py/mpstate.h ../../py/mpthread.h ../../py/nlr.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/limits.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/limits.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/setjmp.h \
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/setjmp.h \
+  ../../py/objlist.h ../../py/objexcept.h ../../py/pystack.h \
+  ../../py/objstr.h ../../py/objnamedtuple.h
+../../py/objnamedtuple.c :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/compat/string.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/string.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/features.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/strings.h :
+  ../../py/objtuple.h ../../py/obj.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/assert.h :
+  ../../py/mpconfig.h mpconfigport.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/stdint.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/stdint.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_gc.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/stdbool.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_mem.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_kconfig.h :
+  ../../lib/lv_bindings/lv_conf.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/stddef.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_log.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_types.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_ll.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_task.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/lv_img_cache.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/lv_img_decoder.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_conf_internal.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/lv_img_buf.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_color.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/lv_math.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_area.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_fs.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_types.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/lv_style.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/lv_font.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/../lv_conf_internal.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/lv_symbol_def.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/../lv_misc/lv_area.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_color.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_area.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_anim.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_types.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_misc/lv_debug.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_draw/lv_draw_blend.h :
+  ../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/lv_draw_mask.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/alloca.h :
+  ../../py/misc.h ../../py/qstr.h build/genhdr/qstrdefs.generated.h :
+  ../../py/mpprint.h ../../py/runtime0.h ../../py/runtime.h :
+  ../../py/mpstate.h ../../py/mpthread.h ../../py/nlr.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/limits.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/limits.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/setjmp.h :
+  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/setjmp.h :
+  ../../py/objlist.h ../../py/objexcept.h ../../py/pystack.h :
+  ../../py/objstr.h ../../py/objnamedtuple.h :
