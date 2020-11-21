@@ -44,7 +44,7 @@ JSFLAGS += --memory-init-file 0 --js-library library.js
 JSFLAGS += -s EXTRA_EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']"
 JSFLAGS += -s EXPORTED_FUNCTIONS="['_mp_js_init', '_mp_js_init_repl', '_mp_js_do_str', '_mp_js_process_char', '_mp_hal_get_interrupt_char', '_mp_keyboard_interrupt', '_mp_handle_pending' ]" 
 
-ifdef EMSCRIPTEN
+#ifdef EMSCRIPTEN
 	# only for profiling, remove -s EMTERPRETIFY_ADVISE=1 when your EMTERPRETIFY_WHITELIST is ok
 	# not using an emterpreting list *is* bad and will lead to poor performance and huge binary.
 	ifdef ASYNC
@@ -56,17 +56,15 @@ ifdef EMSCRIPTEN
 	CC = emcc $(JSFLAGS)
 	LD = emcc $(JSFLAGS)
 	CPP = emcc -x c -E -D__CPP__ -D__EMSCRIPTEN__
-#	CPP += --sysroot $(EMSCRIPTEN)/system
-#	CPP += $(addprefix -isystem, $(shell env LC_ALL=C $(CC) $(CFLAGS_EXTRA) -E -x c++ /dev/null -v 2>&1 |sed -e '/^\#include <...>/,/^End of search/{ //!b };d'))
-else
-	ifdef CLANG
-		CC=clang
-		CPP=clang -E -D__CPP__
-	else
-		CC = gcc
-		CPP = gcc -E -D__CPP__
-	endif
-endif
+#else
+#	ifdef CLANG
+#		CC=clang
+#		CPP=clang -E -D__CPP__
+#	else
+#		CC = gcc
+#		CPP = gcc -E -D__CPP__
+#	endif
+#endif
 
 
 
