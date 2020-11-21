@@ -1,3 +1,4 @@
+$(info ************  lvgl_javascript version ************)
 # customizations for lvgl
 WASM_FILE_API = 1
 FROZEN_DIR ?= modules
@@ -47,15 +48,15 @@ JSFLAGS += -s EXPORTED_FUNCTIONS="['_mp_js_init', '_mp_js_init_repl', '_mp_js_do
 #ifdef EMSCRIPTEN
 	# only for profiling, remove -s EMTERPRETIFY_ADVISE=1 when your EMTERPRETIFY_WHITELIST is ok
 	# not using an emterpreting list *is* bad and will lead to poor performance and huge binary.
-	ifdef ASYNC
-		CFLAGS += -D__EMTERPRETER__=1 
-		CFLAGS += -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 -s 'EMTERPRETIFY_FILE="micropython.binary"'
-		CFLAGS += -s EMTERPRETIFY_SYNCLIST='["_mp_execute_bytecode"]' -s EMTERPRETIFY_ADVISE=1
-	endif
+ifdef ASYNC
+	CFLAGS += -D__EMTERPRETER__=1 
+	CFLAGS += -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 -s 'EMTERPRETIFY_FILE="micropython.binary"'
+	CFLAGS += -s EMTERPRETIFY_SYNCLIST='["_mp_execute_bytecode"]' -s EMTERPRETIFY_ADVISE=1
+endif
 
-	CC = emcc $(JSFLAGS)
-	LD = emcc $(JSFLAGS)
-	CPP = emcc -x c -E -D__CPP__ -D__EMSCRIPTEN__
+CC = emcc $(JSFLAGS)
+LD = emcc $(JSFLAGS)
+CPP := emcc -x c -E -D__CPP__ -D__EMSCRIPTEN__
 #else
 #	ifdef CLANG
 #		CC=clang
