@@ -1,8 +1,8 @@
 build/build/frozen.o: build/frozen.c \
-  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/stdint.h \
-  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h \
-  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/stdint.h
+  /home/runner/work/_temp/0decb542-331d-4f95-b32a-f689132bc5a4/emsdk-master/upstream/emscripten/system/include/libc/stdint.h \
+  /home/runner/work/_temp/0decb542-331d-4f95-b32a-f689132bc5a4/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h \
+  /home/runner/work/_temp/0decb542-331d-4f95-b32a-f689132bc5a4/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/stdint.h
 build/frozen.c :
-  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/include/libc/stdint.h :
-  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h :
-  /home/runner/work/lv_micropython/lv_micropython/emsdk-cache/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/stdint.h :
+  /home/runner/work/_temp/0decb542-331d-4f95-b32a-f689132bc5a4/emsdk-master/upstream/emscripten/system/include/libc/stdint.h :
+  /home/runner/work/_temp/0decb542-331d-4f95-b32a-f689132bc5a4/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h :
+  /home/runner/work/_temp/0decb542-331d-4f95-b32a-f689132bc5a4/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/stdint.h :
