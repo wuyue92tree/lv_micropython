@@ -3829,7 +3829,7 @@ STATIC const mp_obj_type_t mp_LV_DROPDOWN_PART_type = {
 
 STATIC const mp_rom_map_elem_t LV_ROLLER_MODE_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_NORMAL), MP_ROM_PTR(MP_ROM_INT(LV_ROLLER_MODE_NORMAL)) },
-    { MP_ROM_QSTR(MP_QSTR_INIFINITE), MP_ROM_PTR(MP_ROM_INT(LV_ROLLER_MODE_INIFINITE)) }
+    { MP_ROM_QSTR(MP_QSTR_INFINITE), MP_ROM_PTR(MP_ROM_INT(LV_ROLLER_MODE_INFINITE)) }
 };
 
 STATIC MP_DEFINE_CONST_DICT(LV_ROLLER_MODE_locals_dict, LV_ROLLER_MODE_locals_dict_table);
@@ -4066,7 +4066,7 @@ STATIC const mp_obj_type_t mp_LV_TABVIEW_TAB_POS_type = {
 
 STATIC const mp_rom_map_elem_t LV_TABVIEW_PART_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_BG), MP_ROM_PTR(MP_ROM_INT(LV_TABVIEW_PART_BG)) },
-    { MP_ROM_QSTR(MP_QSTR_BG_SCRLLABLE), MP_ROM_PTR(MP_ROM_INT(LV_TABVIEW_PART_BG_SCRLLABLE)) },
+    { MP_ROM_QSTR(MP_QSTR_BG_SCROLLABLE), MP_ROM_PTR(MP_ROM_INT(LV_TABVIEW_PART_BG_SCROLLABLE)) },
     { MP_ROM_QSTR(MP_QSTR_TAB_BG), MP_ROM_PTR(MP_ROM_INT(LV_TABVIEW_PART_TAB_BG)) },
     { MP_ROM_QSTR(MP_QSTR_TAB_BTN), MP_ROM_PTR(MP_ROM_INT(LV_TABVIEW_PART_TAB_BTN)) },
     { MP_ROM_QSTR(MP_QSTR_INDIC), MP_ROM_PTR(MP_ROM_INT(LV_TABVIEW_PART_INDIC)) }
@@ -13680,6 +13680,22 @@ STATIC MP_DEFINE_CONST_LV_FUN_OBJ_VAR(mp_lv_label_cut_text_obj, 3, mp_lv_label_c
  
 
 /*
+ * lvgl extension definition for:
+ * void lv_label_refr_text(lv_obj_t *label)
+ */
+ 
+STATIC mp_obj_t mp_lv_label_refr_text(size_t mp_n_args, const mp_obj_t *mp_args)
+{
+    lv_obj_t *label = mp_to_lv(mp_args[0]);
+    lv_label_refr_text(label);
+    return mp_const_none;
+}
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_VAR(mp_lv_label_refr_text_obj, 1, mp_lv_label_refr_text, lv_label_refr_text);
+
+ 
+
+/*
  * lvgl label object definitions
  */
     
@@ -13707,6 +13723,7 @@ STATIC const mp_rom_map_elem_t label_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_get_style), MP_ROM_PTR(&mp_lv_label_get_style_obj) },
     { MP_ROM_QSTR(MP_QSTR_ins_text), MP_ROM_PTR(&mp_lv_label_ins_text_obj) },
     { MP_ROM_QSTR(MP_QSTR_cut_text), MP_ROM_PTR(&mp_lv_label_cut_text_obj) },
+    { MP_ROM_QSTR(MP_QSTR_refr_text), MP_ROM_PTR(&mp_lv_label_refr_text_obj) },
     { MP_ROM_QSTR(MP_QSTR_LONG), MP_ROM_PTR(&mp_LV_LABEL_LONG_type) },
     { MP_ROM_QSTR(MP_QSTR_ALIGN), MP_ROM_PTR(&mp_LV_LABEL_ALIGN_type) },
     { MP_ROM_QSTR(MP_QSTR_PART), MP_ROM_PTR(&mp_LV_LABEL_PART_type) }
@@ -22205,6 +22222,23 @@ STATIC MP_DEFINE_CONST_LV_FUN_OBJ_VAR(mp_lv_msgbox_set_text_obj, 2, mp_lv_msgbox
 
 /*
  * lvgl extension definition for:
+ * void lv_msgbox_set_text_fmt(lv_obj_t *mbox, const char *fmt, ...)
+ */
+ 
+STATIC mp_obj_t mp_lv_msgbox_set_text_fmt(size_t mp_n_args, const mp_obj_t *mp_args)
+{
+    lv_obj_t *mbox = mp_to_lv(mp_args[0]);
+    const char *fmt = (char*)convert_from_str(mp_args[1]);
+    lv_msgbox_set_text_fmt(mbox, fmt);
+    return mp_const_none;
+}
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_VAR(mp_lv_msgbox_set_text_fmt_obj, 3, mp_lv_msgbox_set_text_fmt, lv_msgbox_set_text_fmt);
+
+ 
+
+/*
+ * lvgl extension definition for:
  * void lv_msgbox_set_anim_time(lv_obj_t *mbox, uint16_t anim_time)
  */
  
@@ -22374,6 +22408,7 @@ STATIC MP_DEFINE_CONST_LV_FUN_OBJ_VAR(mp_lv_msgbox_get_btnmatrix_obj, 1, mp_lv_m
 STATIC const mp_rom_map_elem_t msgbox_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_add_btns), MP_ROM_PTR(&mp_lv_msgbox_add_btns_obj) },
     { MP_ROM_QSTR(MP_QSTR_set_text), MP_ROM_PTR(&mp_lv_msgbox_set_text_obj) },
+    { MP_ROM_QSTR(MP_QSTR_set_text_fmt), MP_ROM_PTR(&mp_lv_msgbox_set_text_fmt_obj) },
     { MP_ROM_QSTR(MP_QSTR_set_anim_time), MP_ROM_PTR(&mp_lv_msgbox_set_anim_time_obj) },
     { MP_ROM_QSTR(MP_QSTR_start_auto_close), MP_ROM_PTR(&mp_lv_msgbox_start_auto_close_obj) },
     { MP_ROM_QSTR(MP_QSTR_stop_auto_close), MP_ROM_PTR(&mp_lv_msgbox_stop_auto_close_obj) },

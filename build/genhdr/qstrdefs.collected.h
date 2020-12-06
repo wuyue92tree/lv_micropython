@@ -142,7 +142,7 @@ Q(BG_MAIN_STOP)
 
 Q(BG_OPA)
 
-Q(BG_SCRLLABLE)
+Q(BG_SCROLLABLE)
 
 Q(BIDI_DIR)
 
@@ -768,11 +768,11 @@ Q(INDIC)
 
 Q(INDIC)
 
+Q(INFINITE)
+
 Q(INFO)
 
 Q(INHERIT)
-
-Q(INIFINITE)
 
 Q(INSERT)
 
@@ -7032,6 +7032,8 @@ Q(refr_task)
 
 Q(refr_task)
 
+Q(refr_text)
+
 Q(refresh)
 
 Q(refresh)
@@ -8047,6 +8049,8 @@ Q(set_text_blend_mode)
 Q(set_text_color)
 
 Q(set_text_decor)
+
+Q(set_text_fmt)
 
 Q(set_text_fmt)
 

@@ -9,10 +9,7 @@
 # 1 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_log.h" 1
 # 16 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_log.h"
 # 1 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h" 1
-# 12 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h"
-# 1 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_kconfig.h" 1
-# 13 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h" 2
-
+# 11 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h"
 # 1 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdint.h" 1
 # 1 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/_fake_defines.h" 1
 # 2 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdint.h" 2
@@ -188,8 +185,18 @@ typedef struct xcb_connection_t xcb_connection_t;
 typedef uint32_t xcb_window_t;
 typedef uint32_t xcb_visualid_t;
 # 3 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdint.h" 2
-# 15 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h" 2
-# 33 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h"
+# 12 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h" 2
+
+
+
+
+
+
+
+
+# 1 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_kconfig.h" 1
+# 21 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h" 2
+# 44 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h"
 # 1 "../../lib/lv_bindings/lv_conf.h" 1
 # 15 "../../lib/lv_bindings/lv_conf.h"
 # 1 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdint.h" 1
@@ -207,11 +214,11 @@ typedef void * lv_img_decoder_user_data_t;
 # 310 "../../lib/lv_bindings/lv_conf.h"
 typedef void * lv_disp_drv_user_data_t;
 typedef void * lv_indev_drv_user_data_t;
-# 446 "../../lib/lv_bindings/lv_conf.h"
+# 447 "../../lib/lv_bindings/lv_conf.h"
 typedef void * lv_font_user_data_t;
-# 551 "../../lib/lv_bindings/lv_conf.h"
+# 552 "../../lib/lv_bindings/lv_conf.h"
 typedef void * lv_obj_user_data_t;
-# 34 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h" 2
+# 45 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h" 2
 
 
 
@@ -220,7 +227,7 @@ typedef void * lv_obj_user_data_t;
 
 
 # 1 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdint.h" 1
-# 42 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h" 2
+# 53 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_conf_internal.h" 2
 # 17 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_log.h" 2
 # 1 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdint.h" 1
 # 18 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_log.h" 2
@@ -773,9 +780,9 @@ static inline uint8_t lv_color_to8(lv_color_t color)
 {
 # 356 "../../lib/lv_bindings/lvgl/src/lv_hal/../lv_misc/lv_color.h"
     lv_color8_t ret;
-    (ret).ch.red = (uint8_t)((color).ch.red >> 5) & 0x7U;;
-    (ret).ch.green = (uint8_t)((color).ch.green >> 5) & 0x7U;;
-    (ret).ch.blue = (uint8_t)((color).ch.blue >> 6) & 0x3U;;
+    (ret).ch.red = (uint8_t)((color).ch.red >> 5) & 0x7U;
+    (ret).ch.green = (uint8_t)((color).ch.green >> 5) & 0x7U;
+    (ret).ch.blue = (uint8_t)((color).ch.blue >> 6) & 0x3U;
     return ret.full;
 
 }
@@ -784,14 +791,14 @@ static inline uint16_t lv_color_to16(lv_color_t color)
 {
 # 384 "../../lib/lv_bindings/lvgl/src/lv_hal/../lv_misc/lv_color.h"
     lv_color16_t ret;
-    (ret).ch.red = (uint8_t)((color).ch.red >> 3) & 0x1FU;;
+    (ret).ch.red = (uint8_t)((color).ch.red >> 3) & 0x1FU;
 
 
-    (ret).ch.green = (uint8_t)((color).ch.green >> 2) & 0x3FU;;
+    (ret).ch.green = (uint8_t)((color).ch.green >> 2) & 0x3FU;
 
 
 
-    (ret).ch.blue = (uint8_t)((color).ch.blue >> 3) & 0x1FU;;
+    (ret).ch.blue = (uint8_t)((color).ch.blue >> 3) & 0x1FU;
     return ret.full;
 
 }
@@ -808,13 +815,13 @@ static inline uint32_t lv_color_to32(lv_color_t color)
     lv_color_t ret;
 
 
-    (ret).ch.red = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) (c1).ch.red * mix + (c2).ch.red * (255 - mix) + 0) * 0x8081) >> 0x17)) & 0xFF);;
+    (ret).ch.red = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) (c1).ch.red * mix + (c2).ch.red * (255 - mix) + 0) * 0x8081) >> 0x17)) & 0xFF);
 
-    (ret).ch.green = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) (c1).ch.green * mix + (c2).ch.green * (255 - mix) + 0) * 0x8081) >> 0x17)) & 0xFF);;
+    (ret).ch.green = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) (c1).ch.green * mix + (c2).ch.green * (255 - mix) + 0) * 0x8081) >> 0x17)) & 0xFF);
 
-    (ret).ch.blue = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) (c1).ch.blue * mix + (c2).ch.blue * (255 - mix) + 0) * 0x8081) >> 0x17)) & 0xFF);;
+    (ret).ch.blue = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) (c1).ch.blue * mix + (c2).ch.blue * (255 - mix) + 0) * 0x8081) >> 0x17)) & 0xFF);
 
-    (ret).ch.alpha = (uint32_t)((0xFF) & 0xFF);;
+    (ret).ch.alpha = (uint32_t)((0xFF) & 0xFF);
 
 
 
@@ -837,10 +844,10 @@ static inline uint32_t lv_color_to32(lv_color_t color)
     lv_color_t ret;
 
 
-    (ret).ch.red = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) premult_c1[0] + (c2).ch.red * mix + 0) * 0x8081) >> 0x17)) & 0xFF);;
-    (ret).ch.green = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) premult_c1[1] + (c2).ch.green * mix + 0) * 0x8081) >> 0x17)) & 0xFF);;
-    (ret).ch.blue = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) premult_c1[2] + (c2).ch.blue * mix + 0) * 0x8081) >> 0x17)) & 0xFF);;
-    (ret).ch.alpha = (uint32_t)((0xFF) & 0xFF);;
+    (ret).ch.red = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) premult_c1[0] + (c2).ch.red * mix + 0) * 0x8081) >> 0x17)) & 0xFF);
+    (ret).ch.green = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) premult_c1[1] + (c2).ch.green * mix + 0) * 0x8081) >> 0x17)) & 0xFF);
+    (ret).ch.blue = (uint32_t)((((uint32_t)((uint32_t) ((uint16_t) premult_c1[2] + (c2).ch.blue * mix + 0) * 0x8081) >> 0x17)) & 0xFF);
+    (ret).ch.alpha = (uint32_t)((0xFF) & 0xFF);
 # 527 "../../lib/lv_bindings/lvgl/src/lv_hal/../lv_misc/lv_color.h"
     return ret;
 }
@@ -1637,7 +1644,7 @@ enum {
     _LV_STR_SYMBOL_DUMMY,
 };
 # 22 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h" 2
-# 42 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
+# 37 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
 typedef struct {
     uint16_t adv_w;
     uint16_t box_w;
@@ -1681,12 +1688,12 @@ typedef struct _lv_font_struct {
 
 
 } lv_font_t;
-# 96 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
+# 91 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
 const uint8_t * lv_font_get_glyph_bitmap(const lv_font_t * font_p, uint32_t letter);
-# 106 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
+# 101 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
 bool lv_font_get_glyph_dsc(const lv_font_t * font_p, lv_font_glyph_dsc_t * dsc_out, uint32_t letter,
                            uint32_t letter_next);
-# 116 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
+# 111 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
 uint16_t lv_font_get_glyph_width(const lv_font_t * font, uint32_t letter, uint32_t letter_next);
 
 
@@ -1698,13 +1705,13 @@ static inline lv_coord_t lv_font_get_line_height(const lv_font_t * font_p)
 {
     return font_p->line_height;
 }
-# 147 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
+# 142 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
 extern lv_font_t lv_font_montserrat_14;
 
 
 
 extern lv_font_t lv_font_montserrat_16;
-# 231 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
+# 230 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_font/lv_font.h"
 extern lv_font_t lv_font_dejavu_16_persian_hebrew;
 # 18 "../../lib/lv_bindings/lvgl/src/lv_core/lv_style.h" 2
 
@@ -2741,7 +2748,17 @@ void _lv_bidi_process_paragraph(const char * str_in, char * str_out, uint32_t le
 # 18 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
 # 1 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdbool.h" 1
 # 19 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h" 2
-# 39 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
+# 1 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdarg.h" 1
+# 20 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h" 2
+
+
+
+# 1 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_printf.h" 1
+# 61 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_printf.h"
+# 1 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdio.h" 1
+# 62 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_printf.h" 2
+# 24 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h" 2
+# 41 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
 enum {
     LV_TXT_FLAG_NONE = 0x00,
     LV_TXT_FLAG_RECOLOR = 0x01,
@@ -2760,16 +2777,16 @@ enum {
     LV_TXT_CMD_STATE_IN,
 };
 typedef uint8_t lv_txt_cmd_state_t;
-# 73 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
+# 75 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
 void _lv_txt_get_size(lv_point_t * size_res, const char * text, const lv_font_t * font, lv_coord_t letter_space,
                       lv_coord_t line_space, lv_coord_t max_width, lv_txt_flag_t flag);
-# 87 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
+# 89 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
 uint32_t _lv_txt_get_next_line(const char * txt, const lv_font_t * font, lv_coord_t letter_space, lv_coord_t max_width,
                                lv_txt_flag_t flag);
-# 100 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
+# 102 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
 lv_coord_t _lv_txt_get_width(const char * txt, uint32_t length, const lv_font_t * font, lv_coord_t letter_space,
                              lv_txt_flag_t flag);
-# 111 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
+# 113 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
 bool _lv_txt_is_cmd(lv_txt_cmd_state_t * state, uint32_t c);
 
 
@@ -2779,9 +2796,16 @@ bool _lv_txt_is_cmd(lv_txt_cmd_state_t * state, uint32_t c);
 
 
 void _lv_txt_ins(char * txt_buf, uint32_t pos, const char * ins_txt);
-# 128 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
+# 130 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
 void _lv_txt_cut(char * txt, uint32_t pos, uint32_t len);
-# 139 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
+
+
+
+
+
+
+char * _lv_txt_set_text_vfmt(const char * fmt, va_list ap);
+# 148 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
 extern uint8_t (*_lv_txt_encoded_size)(const char *);
 
 
@@ -2797,13 +2821,13 @@ extern uint32_t (*_lv_txt_unicode_to_encoded)(uint32_t);
 
 
 extern uint32_t (*_lv_txt_encoded_conv_wc)(uint32_t c);
-# 163 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
-extern uint32_t (*_lv_txt_encoded_next)(const char *, uint32_t *);
 # 172 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
-extern uint32_t (*_lv_txt_encoded_prev)(const char *, uint32_t *);
+extern uint32_t (*_lv_txt_encoded_next)(const char *, uint32_t *);
 # 181 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
-extern uint32_t (*_lv_txt_encoded_get_byte_id)(const char *, uint32_t);
+extern uint32_t (*_lv_txt_encoded_prev)(const char *, uint32_t *);
 # 190 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
+extern uint32_t (*_lv_txt_encoded_get_byte_id)(const char *, uint32_t);
+# 199 "../../lib/lv_bindings/lvgl/src/lv_core/../lv_draw/../lv_misc/lv_txt.h"
 extern uint32_t (*_lv_txt_encoded_get_char_id)(const char *, uint32_t);
 
 
@@ -5075,11 +5099,7 @@ lv_disp_t * _lv_refr_get_disp_refreshing(void);
 
 
 void _lv_refr_set_disp_refreshing(lv_disp_t * disp);
-
-
-
-
-
+# 93 "../../lib/lv_bindings/lvgl/src/lv_core/lv_refr.h"
 void _lv_disp_refr_task(lv_task_t * task);
 # 38 "../../lib/lv_bindings/lvgl/lvgl.h" 2
 # 1 "../../lib/lv_bindings/lvgl/src/lv_core/lv_disp.h" 1
@@ -5618,11 +5638,7 @@ bool lv_font_get_glyph_dsc_fmt_txt(const lv_font_t * font, lv_font_glyph_dsc_t *
 
 void _lv_font_clean_up_fmt_txt(void);
 # 45 "../../lib/lv_bindings/lvgl/lvgl.h" 2
-# 1 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_printf.h" 1
-# 61 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_printf.h"
-# 1 "../../lib/lv_bindings/pycparser/utils/fake_libc_include/stdio.h" 1
-# 62 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_printf.h" 2
-# 46 "../../lib/lv_bindings/lvgl/lvgl.h" 2
+
 
 # 1 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_btn.h" 1
 # 25 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_btn.h"
@@ -6095,7 +6111,7 @@ void lv_label_set_text_sel_start(lv_obj_t * label, uint32_t index);
 
 
 void lv_label_set_text_sel_end(lv_obj_t * label, uint32_t index);
-# 199 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
+# 198 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
 char * lv_label_get_text(const lv_obj_t * label);
 
 
@@ -6125,9 +6141,9 @@ bool lv_label_get_recolor(const lv_obj_t * label);
 
 
 uint16_t lv_label_get_anim_speed(const lv_obj_t * label);
-# 236 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
+# 235 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
 void lv_label_get_letter_pos(const lv_obj_t * label, uint32_t index, lv_point_t * pos);
-# 245 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
+# 244 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
 uint32_t lv_label_get_letter_on(const lv_obj_t * label, lv_point_t * pos);
 
 
@@ -6154,10 +6170,16 @@ uint32_t lv_label_get_text_sel_end(const lv_obj_t * label);
 
 
 lv_style_list_t * lv_label_get_style(lv_obj_t * label, uint8_t type);
-# 283 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
+# 282 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
 void lv_label_ins_text(lv_obj_t * label, uint32_t pos, const char * txt);
-# 292 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
+# 291 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_label.h"
 void lv_label_cut_text(lv_obj_t * label, uint32_t pos, uint32_t cnt);
+
+
+
+
+
+void lv_label_refr_text(lv_obj_t * label);
 # 23 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_img.h" 2
 # 33 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_img.h"
 typedef struct {
@@ -7552,6 +7574,7 @@ typedef struct {
     lv_area_t right_knob_area;
     int16_t * value_to_set;
     uint8_t dragging : 1;
+    uint8_t left_knob_focus : 1;
 } lv_slider_ext_t;
 
 
@@ -7560,9 +7583,9 @@ enum {
     LV_SLIDER_PART_INDIC,
     LV_SLIDER_PART_KNOB,
 };
-# 71 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_slider.h"
+# 72 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_slider.h"
 lv_obj_t * lv_slider_create(lv_obj_t * par, const lv_obj_t * copy);
-# 83 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_slider.h"
+# 84 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_slider.h"
 static inline void lv_slider_set_value(lv_obj_t * slider, int16_t value, lv_anim_enable_t anim)
 {
     lv_bar_set_value(slider, value, anim);
@@ -7615,7 +7638,7 @@ static inline void lv_slider_set_type(lv_obj_t * slider, lv_slider_type_t type)
     else if(type == LV_SLIDER_TYPE_RANGE)
         lv_bar_set_type(slider, LV_BAR_TYPE_CUSTOM);
 }
-# 145 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_slider.h"
+# 146 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_slider.h"
 int16_t lv_slider_get_value(const lv_obj_t * slider);
 
 
@@ -8137,7 +8160,7 @@ void lv_dropdown_close(lv_obj_t * ddlist);
 # 38 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_roller.h"
 enum {
     LV_ROLLER_MODE_NORMAL,
-    LV_ROLLER_MODE_INIFINITE,
+    LV_ROLLER_MODE_INFINITE,
 };
 
 typedef uint8_t lv_roller_mode_t;
@@ -8271,7 +8294,7 @@ typedef struct {
     char * placeholder_txt;
     lv_style_list_t style_placeholder;
     char * pwd_tmp;
-    const char * accapted_chars;
+    const char * accepted_chars;
     uint32_t max_length;
     uint16_t pwd_show_time;
     struct {
@@ -8889,7 +8912,7 @@ enum {
     LV_TABVIEW_PART_BG = LV_OBJ_PART_MAIN,
     _LV_TABVIEW_PART_VIRTUAL_LAST = _LV_OBJ_PART_VIRTUAL_LAST,
 
-    LV_TABVIEW_PART_BG_SCRLLABLE = _LV_OBJ_PART_REAL_LAST,
+    LV_TABVIEW_PART_BG_SCROLLABLE = _LV_OBJ_PART_REAL_LAST,
     LV_TABVIEW_PART_TAB_BG,
     LV_TABVIEW_PART_TAB_BTN,
     LV_TABVIEW_PART_INDIC,
@@ -9067,6 +9090,13 @@ void lv_msgbox_set_text(lv_obj_t * mbox, const char * txt);
 
 
 
+void lv_msgbox_set_text_fmt(lv_obj_t * mbox, const char * fmt, ...);
+
+
+
+
+
+
 void lv_msgbox_set_anim_time(lv_obj_t * mbox, uint16_t anim_time);
 
 
@@ -9088,7 +9118,7 @@ void lv_msgbox_stop_auto_close(lv_obj_t * mbox);
 
 
 void lv_msgbox_set_recolor(lv_obj_t * mbox, bool en);
-# 138 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_msgbox.h"
+# 145 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_msgbox.h"
 const char * lv_msgbox_get_text(const lv_obj_t * mbox);
 
 
@@ -9546,6 +9576,7 @@ typedef struct {
     uint16_t dragging : 1;
     uint16_t type : 2;
     uint16_t adjustable : 1;
+    uint16_t min_close : 1;
     uint16_t chg_rate;
     uint32_t last_tick;
     int16_t last_angle;
@@ -9560,9 +9591,9 @@ enum {
     _LV_ARC_PART_REAL_LAST = _LV_OBJ_PART_REAL_LAST,
 };
 typedef uint8_t lv_arc_part_t;
-# 79 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_arc.h"
+# 80 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_arc.h"
 lv_obj_t * lv_arc_create(lv_obj_t * par, const lv_obj_t * copy);
-# 94 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_arc.h"
+# 95 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_arc.h"
 void lv_arc_set_start_angle(lv_obj_t * arc, uint16_t start);
 
 
@@ -9646,7 +9677,7 @@ void lv_arc_set_chg_rate(lv_obj_t * arc, uint16_t threshold);
 
 
 void lv_arc_set_adjustable(lv_obj_t * arc, bool adjustable);
-# 187 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_arc.h"
+# 188 "../../lib/lv_bindings/lvgl/src/lv_widgets/lv_arc.h"
 uint16_t lv_arc_get_angle_start(lv_obj_t * arc);
 
 
