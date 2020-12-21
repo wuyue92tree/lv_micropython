@@ -10,21 +10,21 @@
 # 62 "../../py/mpconfig.h"
 # 1 "./mpconfigport.h" 1
 # 27 "./mpconfigport.h"
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 1 3
-# 106 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 3
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/__config" 1 3
-# 21 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/__config" 3
-# 107 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 2 3
-# 110 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 3
-# 123 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 3
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 1 3
-# 20 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 3
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
-# 125 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 1 3
+# 106 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/__config" 1 3
+# 21 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/__config" 3
+# 107 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 2 3
+# 110 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 3
+# 123 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 1 3
+# 20 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
+# 125 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
 typedef unsigned long int uintptr_t;
-# 140 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
+# 140 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
 typedef long int intptr_t;
-# 156 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
+# 156 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
 typedef signed char int8_t;
 
 
@@ -66,9 +66,9 @@ typedef unsigned int uint32_t;
 
 
 typedef unsigned long long int uint64_t;
-# 206 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
+# 206 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
 typedef unsigned long long int uintmax_t;
-# 21 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 2 3
+# 21 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 2 3
 
 typedef int8_t int_fast8_t;
 typedef int64_t int_fast64_t;
@@ -85,14 +85,14 @@ typedef uint8_t uint_least8_t;
 typedef uint16_t uint_least16_t;
 typedef uint32_t uint_least32_t;
 typedef uint64_t uint_least64_t;
-# 95 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 3
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/stdint.h" 1 3
+# 95 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/stdint.h" 1 3
 typedef int32_t int_fast16_t;
 typedef int32_t int_fast32_t;
 typedef uint32_t uint_fast16_t;
 typedef uint32_t uint_fast32_t;
-# 96 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 2 3
-# 124 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 2 3
+# 96 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/stdint.h" 2 3
+# 124 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stdint.h" 2 3
 # 28 "./mpconfigport.h" 2
 # 174 "./mpconfigport.h"
 extern const struct _mp_obj_module_t mp_module_utime;
@@ -105,12 +105,12 @@ extern const struct _mp_obj_module_t mp_module_lodepng;
 
 # 1 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_gc.h" 1
 # 17 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_gc.h"
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stdbool.h" 1 3
-# 26 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stdbool.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stdbool.h" 1 3
+# 26 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stdbool.h" 3
 
 
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/stdbool.h" 1 3
-# 29 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stdbool.h" 2 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/stdbool.h" 1 3
+# 29 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stdbool.h" 2 3
 # 18 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_gc.h" 2
 # 1 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_mem.h" 1
 # 16 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_mem.h"
@@ -141,21 +141,21 @@ typedef void * lv_obj_user_data_t;
 # 17 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_mem.h" 2
 
 
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 1 3
-# 43 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 1 3
+# 43 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 3
 
 
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/stddef.h" 1 3
-# 17 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/stddef.h" 3
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
-# 32 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/stddef.h" 1 3
+# 17 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/stddef.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
+# 32 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
 typedef int wchar_t;
-# 120 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
+# 120 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
 typedef unsigned long int size_t;
-# 130 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
+# 130 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
 typedef long int ptrdiff_t;
-# 18 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/stddef.h" 2 3
-# 46 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 2 3
+# 18 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/stddef.h" 2 3
+# 46 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 2 3
 # 20 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_mem.h" 2
 # 1 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_log.h" 1
 # 33 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_log.h"
@@ -322,7 +322,7 @@ void _lv_mem_buf_free_all(void);
 # 19 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_gc.h" 2
 # 1 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_ll.h" 1
 # 18 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_ll.h"
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 1 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 1 3
 # 19 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_ll.h" 2
 # 30 "../../lib/lv_bindings/lvgl/src/lv_misc/lv_ll.h"
 typedef uint8_t lv_ll_node_t;
@@ -836,11 +836,11 @@ lv_color_hsv_t lv_color_to_hsv(lv_color_t color);
 # 18 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/lv_img_buf.h" 2
 # 1 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_area.h" 1
 # 17 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_area.h"
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/string.h" 1 3
-# 58 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/string.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/string.h" 1 3
+# 58 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/string.h" 3
 
 
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/compat/string.h" 1 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/compat/string.h" 1 3
 
 
 
@@ -856,7 +856,7 @@ extern char* strupr(char *);
 
 
 
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/string.h" 1 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/string.h" 1 3
 
 
 
@@ -864,13 +864,13 @@ extern char* strupr(char *);
 
 
 
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/features.h" 1 3
-# 9 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/string.h" 2 3
-# 23 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/string.h" 3
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
-# 391 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/features.h" 1 3
+# 9 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/string.h" 2 3
+# 23 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/string.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
+# 391 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 3
 typedef struct __locale_struct * locale_t;
-# 24 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/string.h" 2 3
+# 24 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/string.h" 2 3
 
 void *memcpy (void *restrict, const void *restrict, size_t);
 void *memmove (void *, const void *, size_t);
@@ -905,10 +905,10 @@ char *strerror (int);
 
 
 
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/strings.h" 1 3
-# 11 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/strings.h" 3
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
-# 12 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/strings.h" 2 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/strings.h" 1 3
+# 11 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/strings.h" 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
+# 12 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/strings.h" 2 3
 
 
 
@@ -931,7 +931,7 @@ int strncasecmp (const char *, const char *, size_t);
 
 int strcasecmp_l (const char *, const char *, locale_t);
 int strncasecmp_l (const char *, const char *, size_t, locale_t);
-# 58 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/string.h" 2 3
+# 58 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/string.h" 2 3
 
 
 
@@ -959,8 +959,8 @@ void *memccpy (void *restrict, const void *restrict, int, size_t);
 char *strsep(char **, const char *);
 size_t strlcat (char *, const char *, size_t);
 size_t strlcpy (char *, const char *, size_t);
-# 16 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/compat/string.h" 2 3
-# 61 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/string.h" 2 3
+# 16 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/compat/string.h" 2 3
+# 61 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/string.h" 2 3
 # 18 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_area.h" 2
 # 29 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_misc/lv_area.h"
 enum {ENUM_LV_COORD_MAX = ((lv_coord_t)((uint32_t)((uint32_t)1 << (8 * sizeof(lv_coord_t) - 1)) - 1000))};
@@ -1530,7 +1530,7 @@ const char * lv_fs_get_last(const char * path);
 # 17 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/lv_style.h"
 # 1 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/lv_font.h" 1
 # 18 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/lv_font.h"
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 1 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libcxx/stddef.h" 1 3
 # 19 "../../lib/lv_bindings/lvgl/src/lv_misc/../lv_draw/../lv_core/../lv_font/lv_font.h" 2
 
 
@@ -2752,7 +2752,7 @@ typedef int mp_int_t;
 typedef unsigned mp_uint_t;
 typedef long mp_off_t;
 # 251 "./mpconfigport.h"
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/alloca.h" 1 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/alloca.h" 1 3
 
 
 
@@ -2761,8 +2761,8 @@ typedef long mp_off_t;
 
 
 
-# 1 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
-# 10 "/home/runner/work/_temp/bdbae6bd-1ee7-43e8-96a3-60b4bc9fcf8c/emsdk-master/upstream/emscripten/system/include/libc/alloca.h" 2 3
+# 1 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/lib/libc/musl/arch/emscripten/bits/alltypes.h" 1 3
+# 10 "/home/runner/work/_temp/03c78124-195f-411a-86a6-95b930eea525/emsdk-master/upstream/emscripten/system/include/libc/alloca.h" 2 3
 
 void *alloca(size_t);
 # 252 "./mpconfigport.h" 2
@@ -4716,6 +4716,8 @@ Q(SIZE)
 
 Q(SIZE)
 
+Q(SIZE)
+
 Q(SKIP_LAST_TICK)
 
 Q(SLIDER)
@@ -5131,6 +5133,8 @@ Q(__delattr__)
 Q(__delitem__)
 
 Q(__delitem__)
+
+Q(__dereference__)
 
 Q(__dereference__)
 
@@ -6139,6 +6143,10 @@ Q(cast)
 Q(cast)
 
 Q(cast)
+
+Q(cast)
+
+Q(cast_instance)
 
 Q(cast_instance)
 
@@ -8956,8 +8964,6 @@ Q(lv_anim_t_ready_cb)
 
 Q(lv_anim_t_ready_cb)
 
-Q(lv_anim_t_ready_cb)
-
 Q(lv_anim_t_start_cb)
 
 Q(lv_anim_t_start_cb)
@@ -9553,10 +9559,6 @@ Q(param)
 Q(partition)
 
 Q(partition)
-
-Q(path)
-
-Q(path)
 
 Q(path)
 
@@ -10183,8 +10185,6 @@ Q(set_cell_merge_right)
 Q(set_cell_type)
 
 Q(set_cell_value)
-
-Q(set_cell_value_fmt)
 
 Q(set_checkable)
 
@@ -10859,10 +10859,6 @@ Q(set_text_blend_mode)
 Q(set_text_color)
 
 Q(set_text_decor)
-
-Q(set_text_fmt)
-
-Q(set_text_fmt)
 
 Q(set_text_font)
 

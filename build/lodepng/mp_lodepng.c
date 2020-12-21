@@ -44,10 +44,12 @@
 
 // Custom function mp object
 
-typedef struct _mp_lv_obj_fun_builtin_var_t {
+typedef mp_obj_t (*mp_fun_ptr_var_t)(size_t n, const mp_obj_t *, void *ptr);
+
+typedef struct mp_lv_obj_fun_builtin_var_t {
     mp_obj_base_t base;
     mp_uint_t n_args;
-    mp_fun_var_t mp_fun;
+    mp_fun_ptr_var_t mp_fun;
     void *lv_fun;
 } mp_lv_obj_fun_builtin_var_t;
 
@@ -77,7 +79,7 @@ STATIC mp_obj_t lv_fun_builtin_var_call(mp_obj_t self_in, size_t n_args, size_t 
            MP_OBJ_IS_TYPE(self_in, &mp_lv_type_fun_builtin_static_var));
     mp_lv_obj_fun_builtin_var_t *self = MP_OBJ_TO_PTR(self_in);
     mp_arg_check_num(n_args, n_kw, self->n_args, self->n_args, false);
-    return self->mp_fun(n_args, args);
+    return self->mp_fun(n_args, args, self->lv_fun);
 }
 
 STATIC mp_int_t mp_func_get_buffer(mp_obj_t self_in, mp_buffer_info_t *bufinfo, mp_uint_t flags) {
@@ -562,7 +564,15 @@ STATIC void *mp_lv_callback(mp_obj_t mp_callback, void *lv_callback, qstr callba
     }
 }
 
-// Dict to hold user data for global callbacks (callbacks without context)
+// Function pointers wrapper
+
+STATIC mp_obj_t mp_lv_funcptr(const mp_lv_obj_fun_builtin_var_t *mp_fun, void *lv_fun)
+{
+    mp_lv_obj_fun_builtin_var_t *funcptr = m_new_obj(mp_lv_obj_fun_builtin_var_t);
+    *funcptr = *mp_fun;
+    funcptr->lv_fun = lv_fun;
+    return MP_OBJ_FROM_PTR(funcptr);
+}
 
 
 
@@ -832,6 +842,31 @@ STATIC const mp_obj_type_t mp_LCT_type = {
     .parent = NULL,
 };
     
+#define funcptr_custom_zlib NULL
+
+
+/*
+ * lodepng extension definition for:
+ * unsigned custom_zlib(unsigned char **, size_t *, const unsigned char *, size_t, const LodePNGDecompressSettings *)
+ */
+ 
+STATIC mp_obj_t mp_funcptr_custom_zlib(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
+{
+    unsigned char **arg0 = mp_to_ptr(mp_args[0]);
+    size_t *arg1 = mp_to_ptr(mp_args[1]);
+    const unsigned char *arg2 = mp_to_ptr(mp_args[2]);
+    size_t arg3 = (size_t)mp_obj_get_int(mp_args[3]);
+    const LodePNGDecompressSettings *arg4 = mp_to_ptr(mp_args[4]);
+    unsigned _res = ((unsigned (*)(unsigned char **, size_t *, const unsigned char *, size_t, const LodePNGDecompressSettings *))lv_func_ptr)(arg0, arg1, arg2, arg3, arg4);
+    return mp_obj_new_int_from_uint(_res);
+}
+
+ 
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_funcptr_custom_zlib_obj, 5, mp_funcptr_custom_zlib, funcptr_custom_zlib);
+    
+STATIC inline mp_obj_t mp_lv_funcptr_custom_zlib(void *fun){ return mp_lv_funcptr(&mp_funcptr_custom_zlib_obj, fun); }
+
 
 /*
  * Function NOT generated:
@@ -880,8 +915,8 @@ STATIC void mp_LodePNGDecompressSettings_attr(mp_obj_t self_in, qstr attr, mp_ob
         {
             case MP_QSTR_ignore_adler32: dest[0] = mp_obj_new_int_from_uint(data->ignore_adler32); break; // converting from unsigned;
             case MP_QSTR_ignore_nlen: dest[0] = mp_obj_new_int_from_uint(data->ignore_nlen); break; // converting from unsigned;
-            case MP_QSTR_custom_zlib: dest[0] = ptr_to_mp((void*)data->custom_zlib); break; // converting from callback unsigned (*)(unsigned char **, size_t *, unsigned char *, size_t, LodePNGDecompressSettings *);
-            case MP_QSTR_custom_inflate: dest[0] = ptr_to_mp((void*)data->custom_inflate); break; // converting from callback unsigned (*)(unsigned char **, size_t *, unsigned char *, size_t, LodePNGDecompressSettings *);
+            case MP_QSTR_custom_zlib: dest[0] = mp_lv_funcptr_custom_zlib((void*)data->custom_zlib); break; // converting from callback unsigned (*)(unsigned char **, size_t *, unsigned char *, size_t, LodePNGDecompressSettings *);
+            case MP_QSTR_custom_inflate: dest[0] = mp_lv_funcptr_custom_zlib((void*)data->custom_inflate); break; // converting from callback unsigned (*)(unsigned char **, size_t *, unsigned char *, size_t, LodePNGDecompressSettings *);
             case MP_QSTR_custom_context: dest[0] = ptr_to_mp((void*)data->custom_context); break; // converting from void *;
             default: call_parent_methods(self_in, attr, dest); // fallback to locals_dict lookup
         }
@@ -1510,8 +1545,6 @@ STATIC mp_obj_t mp_arr_from_char___5__(char *arr)
     return mp_obj_new_list(5, obj_arr); // TODO: return custom iterable object!
 }
     
-/* List of structs: ['C_Pointer', 'LodePNGDecompressSettings', 'LodePNGColorMode', 'LodePNGInfo', 'LodePNGTime', 'LodePNGDecoderSettings', 'LodePNGState'] */
-/* Struct C_Pointer contains: [] */
 
 STATIC const mp_rom_map_elem_t mp_C_Pointer_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SIZE), MP_ROM_PTR(MP_ROM_INT(sizeof(C_Pointer))) },
@@ -1523,7 +1556,6 @@ STATIC const mp_rom_map_elem_t mp_C_Pointer_locals_dict_table[] = {
 
 STATIC MP_DEFINE_CONST_DICT(mp_C_Pointer_locals_dict, mp_C_Pointer_locals_dict_table);
         
-/* Struct LodePNGDecompressSettings contains: [] */
 
 STATIC const mp_rom_map_elem_t mp_LodePNGDecompressSettings_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SIZE), MP_ROM_PTR(MP_ROM_INT(sizeof(struct LodePNGDecompressSettings))) },
@@ -1535,7 +1567,6 @@ STATIC const mp_rom_map_elem_t mp_LodePNGDecompressSettings_locals_dict_table[] 
 
 STATIC MP_DEFINE_CONST_DICT(mp_LodePNGDecompressSettings_locals_dict, mp_LodePNGDecompressSettings_locals_dict_table);
         
-/* Struct LodePNGColorMode contains: [] */
 
 STATIC const mp_rom_map_elem_t mp_LodePNGColorMode_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SIZE), MP_ROM_PTR(MP_ROM_INT(sizeof(LodePNGColorMode))) },
@@ -1547,7 +1578,6 @@ STATIC const mp_rom_map_elem_t mp_LodePNGColorMode_locals_dict_table[] = {
 
 STATIC MP_DEFINE_CONST_DICT(mp_LodePNGColorMode_locals_dict, mp_LodePNGColorMode_locals_dict_table);
         
-/* Struct LodePNGInfo contains: [] */
 
 STATIC const mp_rom_map_elem_t mp_LodePNGInfo_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SIZE), MP_ROM_PTR(MP_ROM_INT(sizeof(LodePNGInfo))) },
@@ -1559,7 +1589,6 @@ STATIC const mp_rom_map_elem_t mp_LodePNGInfo_locals_dict_table[] = {
 
 STATIC MP_DEFINE_CONST_DICT(mp_LodePNGInfo_locals_dict, mp_LodePNGInfo_locals_dict_table);
         
-/* Struct LodePNGTime contains: [] */
 
 STATIC const mp_rom_map_elem_t mp_LodePNGTime_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SIZE), MP_ROM_PTR(MP_ROM_INT(sizeof(LodePNGTime))) },
@@ -1571,7 +1600,6 @@ STATIC const mp_rom_map_elem_t mp_LodePNGTime_locals_dict_table[] = {
 
 STATIC MP_DEFINE_CONST_DICT(mp_LodePNGTime_locals_dict, mp_LodePNGTime_locals_dict_table);
         
-/* Struct LodePNGDecoderSettings contains: [] */
 
 STATIC const mp_rom_map_elem_t mp_LodePNGDecoderSettings_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SIZE), MP_ROM_PTR(MP_ROM_INT(sizeof(LodePNGDecoderSettings))) },
@@ -1583,7 +1611,6 @@ STATIC const mp_rom_map_elem_t mp_LodePNGDecoderSettings_locals_dict_table[] = {
 
 STATIC MP_DEFINE_CONST_DICT(mp_LodePNGDecoderSettings_locals_dict, mp_LodePNGDecoderSettings_locals_dict_table);
         
-/* Struct LodePNGState contains: [] */
 
 STATIC const mp_rom_map_elem_t mp_LodePNGState_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SIZE), MP_ROM_PTR(MP_ROM_INT(sizeof(LodePNGState))) },
@@ -1608,7 +1635,7 @@ STATIC MP_DEFINE_CONST_DICT(mp_LodePNGState_locals_dict, mp_LodePNGState_locals_
  * unsigned lodepng_decode_memory(unsigned char **out, unsigned *w, unsigned *h, const unsigned char *in, size_t insize, LodePNGColorType colortype, unsigned bitdepth)
  */
  
-STATIC mp_obj_t mp_lodepng_decode_memory(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_decode_memory(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned char **out = mp_to_ptr(mp_args[0]);
     unsigned *w = mp_to_ptr(mp_args[1]);
@@ -1617,478 +1644,333 @@ STATIC mp_obj_t mp_lodepng_decode_memory(size_t mp_n_args, const mp_obj_t *mp_ar
     size_t insize = (size_t)mp_obj_get_int(mp_args[4]);
     LodePNGColorType colortype = (int)mp_obj_get_int(mp_args[5]);
     unsigned bitdepth = (unsigned)mp_obj_get_int(mp_args[6]);
-    unsigned _res = lodepng_decode_memory(out, w, h, in, insize, colortype, bitdepth);
+    unsigned _res = ((unsigned (*)(unsigned char **, unsigned *, unsigned *, const unsigned char *, size_t, LodePNGColorType, unsigned))lv_func_ptr)(out, w, h, in, insize, colortype, bitdepth);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decode_memory_obj, 7, mp_lodepng_decode_memory, lodepng_decode_memory);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decode_memory_obj, 7, mp_lodepng_decode_memory, lodepng_decode_memory);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_decode32(unsigned char **out, unsigned *w, unsigned *h, const unsigned char *in, size_t insize)
  */
  
-STATIC mp_obj_t mp_lodepng_decode32(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_decode32(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned char **out = mp_to_ptr(mp_args[0]);
     unsigned *w = mp_to_ptr(mp_args[1]);
     unsigned *h = mp_to_ptr(mp_args[2]);
     const unsigned char *in = mp_to_ptr(mp_args[3]);
     size_t insize = (size_t)mp_obj_get_int(mp_args[4]);
-    unsigned _res = lodepng_decode32(out, w, h, in, insize);
+    unsigned _res = ((unsigned (*)(unsigned char **, unsigned *, unsigned *, const unsigned char *, size_t))lv_func_ptr)(out, w, h, in, insize);
     return mp_obj_new_int_from_uint(_res);
 }
+
+ 
 
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decode32_obj, 5, mp_lodepng_decode32, lodepng_decode32);
+    
+/* Reusing lodepng_decode32 for lodepng_decode24 */
 
- 
-
-/*
- * lodepng extension definition for:
- * unsigned lodepng_decode24(unsigned char **out, unsigned *w, unsigned *h, const unsigned char *in, size_t insize)
- */
- 
-STATIC mp_obj_t mp_lodepng_decode24(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    unsigned char **out = mp_to_ptr(mp_args[0]);
-    unsigned *w = mp_to_ptr(mp_args[1]);
-    unsigned *h = mp_to_ptr(mp_args[2]);
-    const unsigned char *in = mp_to_ptr(mp_args[3]);
-    size_t insize = (size_t)mp_obj_get_int(mp_args[4]);
-    unsigned _res = lodepng_decode24(out, w, h, in, insize);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decode24_obj, 5, mp_lodepng_decode24, lodepng_decode24);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decode24_obj, 5, mp_lodepng_decode32, lodepng_decode24);
+    
 
 /*
  * lodepng extension definition for:
  * const char *lodepng_error_text(unsigned code)
  */
  
-STATIC mp_obj_t mp_lodepng_error_text(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_error_text(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned code = (unsigned)mp_obj_get_int(mp_args[0]);
-    const char * _res = lodepng_error_text(code);
+    const char * _res = ((const char *(*)(unsigned))lv_func_ptr)(code);
     return convert_to_str((void*)_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_error_text_obj, 1, mp_lodepng_error_text, lodepng_error_text);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_error_text_obj, 1, mp_lodepng_error_text, lodepng_error_text);
+    
 
 /*
  * lodepng extension definition for:
  * void lodepng_decompress_settings_init(LodePNGDecompressSettings *settings)
  */
  
-STATIC mp_obj_t mp_lodepng_decompress_settings_init(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_decompress_settings_init(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGDecompressSettings *settings = mp_write_ptr_LodePNGDecompressSettings(mp_args[0]);
-    lodepng_decompress_settings_init(settings);
+    ((void (*)(LodePNGDecompressSettings *))lv_func_ptr)(settings);
     return mp_const_none;
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decompress_settings_init_obj, 1, mp_lodepng_decompress_settings_init, lodepng_decompress_settings_init);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decompress_settings_init_obj, 1, mp_lodepng_decompress_settings_init, lodepng_decompress_settings_init);
+    
 
 /*
  * lodepng extension definition for:
  * void lodepng_color_mode_init(LodePNGColorMode *info)
  */
  
-STATIC mp_obj_t mp_lodepng_color_mode_init(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_color_mode_init(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    lodepng_color_mode_init(info);
+    ((void (*)(LodePNGColorMode *))lv_func_ptr)(info);
     return mp_const_none;
 }
+
+ 
 
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_color_mode_init_obj, 1, mp_lodepng_color_mode_init, lodepng_color_mode_init);
+    
+/* Reusing lodepng_color_mode_init for lodepng_color_mode_cleanup */
 
- 
-
-/*
- * lodepng extension definition for:
- * void lodepng_color_mode_cleanup(LodePNGColorMode *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_color_mode_cleanup(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    lodepng_color_mode_cleanup(info);
-    return mp_const_none;
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_color_mode_cleanup_obj, 1, mp_lodepng_color_mode_cleanup, lodepng_color_mode_cleanup);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_color_mode_cleanup_obj, 1, mp_lodepng_color_mode_init, lodepng_color_mode_cleanup);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_color_mode_copy(LodePNGColorMode *dest, const LodePNGColorMode *source)
  */
  
-STATIC mp_obj_t mp_lodepng_color_mode_copy(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_color_mode_copy(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGColorMode *dest = mp_write_ptr_LodePNGColorMode(mp_args[0]);
     const LodePNGColorMode *source = mp_write_ptr_LodePNGColorMode(mp_args[1]);
-    unsigned _res = lodepng_color_mode_copy(dest, source);
+    unsigned _res = ((unsigned (*)(LodePNGColorMode *, const LodePNGColorMode *))lv_func_ptr)(dest, source);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_color_mode_copy_obj, 2, mp_lodepng_color_mode_copy, lodepng_color_mode_copy);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_color_mode_copy_obj, 2, mp_lodepng_color_mode_copy, lodepng_color_mode_copy);
+    
 
 /*
  * lodepng extension definition for:
  * LodePNGColorMode lodepng_color_mode_make(LodePNGColorType colortype, unsigned bitdepth)
  */
  
-STATIC mp_obj_t mp_lodepng_color_mode_make(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_color_mode_make(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGColorType colortype = (int)mp_obj_get_int(mp_args[0]);
     unsigned bitdepth = (unsigned)mp_obj_get_int(mp_args[1]);
-    LodePNGColorMode _res = lodepng_color_mode_make(colortype, bitdepth);
+    LodePNGColorMode _res = ((LodePNGColorMode (*)(LodePNGColorType, unsigned))lv_func_ptr)(colortype, bitdepth);
     return mp_read_LodePNGColorMode(_res);
 }
 
+ 
+
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_color_mode_make_obj, 2, mp_lodepng_color_mode_make, lodepng_color_mode_make);
+    
+/* Reusing lodepng_color_mode_init for lodepng_palette_clear */
 
- 
-
-/*
- * lodepng extension definition for:
- * void lodepng_palette_clear(LodePNGColorMode *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_palette_clear(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    lodepng_palette_clear(info);
-    return mp_const_none;
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_palette_clear_obj, 1, mp_lodepng_palette_clear, lodepng_palette_clear);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_palette_clear_obj, 1, mp_lodepng_color_mode_init, lodepng_palette_clear);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_palette_add(LodePNGColorMode *info, unsigned char r, unsigned char g, unsigned char b, unsigned char a)
  */
  
-STATIC mp_obj_t mp_lodepng_palette_add(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_palette_add(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
     unsigned char r = (unsigned char)mp_obj_get_int(mp_args[1]);
     unsigned char g = (unsigned char)mp_obj_get_int(mp_args[2]);
     unsigned char b = (unsigned char)mp_obj_get_int(mp_args[3]);
     unsigned char a = (unsigned char)mp_obj_get_int(mp_args[4]);
-    unsigned _res = lodepng_palette_add(info, r, g, b, a);
+    unsigned _res = ((unsigned (*)(LodePNGColorMode *, unsigned char, unsigned char, unsigned char, unsigned char))lv_func_ptr)(info, r, g, b, a);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_palette_add_obj, 5, mp_lodepng_palette_add, lodepng_palette_add);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_palette_add_obj, 5, mp_lodepng_palette_add, lodepng_palette_add);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_get_bpp(const LodePNGColorMode *info)
  */
  
-STATIC mp_obj_t mp_lodepng_get_bpp(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_get_bpp(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     const LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    unsigned _res = lodepng_get_bpp(info);
+    unsigned _res = ((unsigned (*)(const LodePNGColorMode *))lv_func_ptr)(info);
     return mp_obj_new_int_from_uint(_res);
 }
+
+ 
 
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_get_bpp_obj, 1, mp_lodepng_get_bpp, lodepng_get_bpp);
+    
+/* Reusing lodepng_get_bpp for lodepng_get_channels */
 
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_get_channels_obj, 1, mp_lodepng_get_bpp, lodepng_get_channels);
+    
+/* Reusing lodepng_get_bpp for lodepng_is_greyscale_type */
 
-/*
- * lodepng extension definition for:
- * unsigned lodepng_get_channels(const LodePNGColorMode *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_get_channels(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    unsigned _res = lodepng_get_channels(info);
-    return mp_obj_new_int_from_uint(_res);
-}
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_is_greyscale_type_obj, 1, mp_lodepng_get_bpp, lodepng_is_greyscale_type);
+    
+/* Reusing lodepng_get_bpp for lodepng_is_alpha_type */
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_get_channels_obj, 1, mp_lodepng_get_channels, lodepng_get_channels);
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_is_alpha_type_obj, 1, mp_lodepng_get_bpp, lodepng_is_alpha_type);
+    
+/* Reusing lodepng_get_bpp for lodepng_is_palette_type */
 
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_is_palette_type_obj, 1, mp_lodepng_get_bpp, lodepng_is_palette_type);
+    
+/* Reusing lodepng_get_bpp for lodepng_has_palette_alpha */
 
-/*
- * lodepng extension definition for:
- * unsigned lodepng_is_greyscale_type(const LodePNGColorMode *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_is_greyscale_type(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    unsigned _res = lodepng_is_greyscale_type(info);
-    return mp_obj_new_int_from_uint(_res);
-}
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_has_palette_alpha_obj, 1, mp_lodepng_get_bpp, lodepng_has_palette_alpha);
+    
+/* Reusing lodepng_get_bpp for lodepng_can_have_alpha */
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_is_greyscale_type_obj, 1, mp_lodepng_is_greyscale_type, lodepng_is_greyscale_type);
-
- 
-
-/*
- * lodepng extension definition for:
- * unsigned lodepng_is_alpha_type(const LodePNGColorMode *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_is_alpha_type(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    unsigned _res = lodepng_is_alpha_type(info);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_is_alpha_type_obj, 1, mp_lodepng_is_alpha_type, lodepng_is_alpha_type);
-
- 
-
-/*
- * lodepng extension definition for:
- * unsigned lodepng_is_palette_type(const LodePNGColorMode *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_is_palette_type(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    unsigned _res = lodepng_is_palette_type(info);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_is_palette_type_obj, 1, mp_lodepng_is_palette_type, lodepng_is_palette_type);
-
- 
-
-/*
- * lodepng extension definition for:
- * unsigned lodepng_has_palette_alpha(const LodePNGColorMode *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_has_palette_alpha(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    unsigned _res = lodepng_has_palette_alpha(info);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_has_palette_alpha_obj, 1, mp_lodepng_has_palette_alpha, lodepng_has_palette_alpha);
-
- 
-
-/*
- * lodepng extension definition for:
- * unsigned lodepng_can_have_alpha(const LodePNGColorMode *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_can_have_alpha(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const LodePNGColorMode *info = mp_write_ptr_LodePNGColorMode(mp_args[0]);
-    unsigned _res = lodepng_can_have_alpha(info);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_can_have_alpha_obj, 1, mp_lodepng_can_have_alpha, lodepng_can_have_alpha);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_can_have_alpha_obj, 1, mp_lodepng_get_bpp, lodepng_can_have_alpha);
+    
 
 /*
  * lodepng extension definition for:
  * size_t lodepng_get_raw_size(unsigned w, unsigned h, const LodePNGColorMode *color)
  */
  
-STATIC mp_obj_t mp_lodepng_get_raw_size(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_get_raw_size(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned w = (unsigned)mp_obj_get_int(mp_args[0]);
     unsigned h = (unsigned)mp_obj_get_int(mp_args[1]);
     const LodePNGColorMode *color = mp_write_ptr_LodePNGColorMode(mp_args[2]);
-    size_t _res = lodepng_get_raw_size(w, h, color);
+    size_t _res = ((size_t (*)(unsigned, unsigned, const LodePNGColorMode *))lv_func_ptr)(w, h, color);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_get_raw_size_obj, 3, mp_lodepng_get_raw_size, lodepng_get_raw_size);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_get_raw_size_obj, 3, mp_lodepng_get_raw_size, lodepng_get_raw_size);
+    
 
 /*
  * lodepng extension definition for:
  * void lodepng_info_init(LodePNGInfo *info)
  */
  
-STATIC mp_obj_t mp_lodepng_info_init(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_info_init(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGInfo *info = mp_write_ptr_LodePNGInfo(mp_args[0]);
-    lodepng_info_init(info);
+    ((void (*)(LodePNGInfo *))lv_func_ptr)(info);
     return mp_const_none;
 }
+
+ 
 
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_info_init_obj, 1, mp_lodepng_info_init, lodepng_info_init);
+    
+/* Reusing lodepng_info_init for lodepng_info_cleanup */
 
- 
-
-/*
- * lodepng extension definition for:
- * void lodepng_info_cleanup(LodePNGInfo *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_info_cleanup(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    LodePNGInfo *info = mp_write_ptr_LodePNGInfo(mp_args[0]);
-    lodepng_info_cleanup(info);
-    return mp_const_none;
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_info_cleanup_obj, 1, mp_lodepng_info_cleanup, lodepng_info_cleanup);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_info_cleanup_obj, 1, mp_lodepng_info_init, lodepng_info_cleanup);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_info_copy(LodePNGInfo *dest, const LodePNGInfo *source)
  */
  
-STATIC mp_obj_t mp_lodepng_info_copy(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_info_copy(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGInfo *dest = mp_write_ptr_LodePNGInfo(mp_args[0]);
     const LodePNGInfo *source = mp_write_ptr_LodePNGInfo(mp_args[1]);
-    unsigned _res = lodepng_info_copy(dest, source);
+    unsigned _res = ((unsigned (*)(LodePNGInfo *, const LodePNGInfo *))lv_func_ptr)(dest, source);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_info_copy_obj, 2, mp_lodepng_info_copy, lodepng_info_copy);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_info_copy_obj, 2, mp_lodepng_info_copy, lodepng_info_copy);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_add_text(LodePNGInfo *info, const char *key, const char *str)
  */
  
-STATIC mp_obj_t mp_lodepng_add_text(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_add_text(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGInfo *info = mp_write_ptr_LodePNGInfo(mp_args[0]);
     const char *key = (char*)convert_from_str(mp_args[1]);
     const char *str = (char*)convert_from_str(mp_args[2]);
-    unsigned _res = lodepng_add_text(info, key, str);
+    unsigned _res = ((unsigned (*)(LodePNGInfo *, const char *, const char *))lv_func_ptr)(info, key, str);
     return mp_obj_new_int_from_uint(_res);
 }
 
+ 
+
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_add_text_obj, 3, mp_lodepng_add_text, lodepng_add_text);
+    
+/* Reusing lodepng_info_init for lodepng_clear_text */
 
- 
-
-/*
- * lodepng extension definition for:
- * void lodepng_clear_text(LodePNGInfo *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_clear_text(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    LodePNGInfo *info = mp_write_ptr_LodePNGInfo(mp_args[0]);
-    lodepng_clear_text(info);
-    return mp_const_none;
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_clear_text_obj, 1, mp_lodepng_clear_text, lodepng_clear_text);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_clear_text_obj, 1, mp_lodepng_info_init, lodepng_clear_text);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_add_itext(LodePNGInfo *info, const char *key, const char *langtag, const char *transkey, const char *str)
  */
  
-STATIC mp_obj_t mp_lodepng_add_itext(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_add_itext(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGInfo *info = mp_write_ptr_LodePNGInfo(mp_args[0]);
     const char *key = (char*)convert_from_str(mp_args[1]);
     const char *langtag = (char*)convert_from_str(mp_args[2]);
     const char *transkey = (char*)convert_from_str(mp_args[3]);
     const char *str = (char*)convert_from_str(mp_args[4]);
-    unsigned _res = lodepng_add_itext(info, key, langtag, transkey, str);
+    unsigned _res = ((unsigned (*)(LodePNGInfo *, const char *, const char *, const char *, const char *))lv_func_ptr)(info, key, langtag, transkey, str);
     return mp_obj_new_int_from_uint(_res);
 }
 
+ 
+
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_add_itext_obj, 5, mp_lodepng_add_itext, lodepng_add_itext);
+    
+/* Reusing lodepng_info_init for lodepng_clear_itext */
 
- 
-
-/*
- * lodepng extension definition for:
- * void lodepng_clear_itext(LodePNGInfo *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_clear_itext(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    LodePNGInfo *info = mp_write_ptr_LodePNGInfo(mp_args[0]);
-    lodepng_clear_itext(info);
-    return mp_const_none;
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_clear_itext_obj, 1, mp_lodepng_clear_itext, lodepng_clear_itext);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_clear_itext_obj, 1, mp_lodepng_info_init, lodepng_clear_itext);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_set_icc(LodePNGInfo *info, const char *name, const unsigned char *profile, unsigned profile_size)
  */
  
-STATIC mp_obj_t mp_lodepng_set_icc(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_set_icc(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGInfo *info = mp_write_ptr_LodePNGInfo(mp_args[0]);
     const char *name = (char*)convert_from_str(mp_args[1]);
     const unsigned char *profile = mp_to_ptr(mp_args[2]);
     unsigned profile_size = (unsigned)mp_obj_get_int(mp_args[3]);
-    unsigned _res = lodepng_set_icc(info, name, profile, profile_size);
+    unsigned _res = ((unsigned (*)(LodePNGInfo *, const char *, const unsigned char *, unsigned))lv_func_ptr)(info, name, profile, profile_size);
     return mp_obj_new_int_from_uint(_res);
 }
 
+ 
+
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_set_icc_obj, 4, mp_lodepng_set_icc, lodepng_set_icc);
+    
+/* Reusing lodepng_info_init for lodepng_clear_icc */
 
- 
-
-/*
- * lodepng extension definition for:
- * void lodepng_clear_icc(LodePNGInfo *info)
- */
- 
-STATIC mp_obj_t mp_lodepng_clear_icc(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    LodePNGInfo *info = mp_write_ptr_LodePNGInfo(mp_args[0]);
-    lodepng_clear_icc(info);
-    return mp_const_none;
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_clear_icc_obj, 1, mp_lodepng_clear_icc, lodepng_clear_icc);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_clear_icc_obj, 1, mp_lodepng_info_init, lodepng_clear_icc);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_convert(unsigned char *out, const unsigned char *in, const LodePNGColorMode *mode_out, const LodePNGColorMode *mode_in, unsigned w, unsigned h)
  */
  
-STATIC mp_obj_t mp_lodepng_convert(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_convert(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned char *out = mp_to_ptr(mp_args[0]);
     const unsigned char *in = mp_to_ptr(mp_args[1]);
@@ -2096,85 +1978,77 @@ STATIC mp_obj_t mp_lodepng_convert(size_t mp_n_args, const mp_obj_t *mp_args)
     const LodePNGColorMode *mode_in = mp_write_ptr_LodePNGColorMode(mp_args[3]);
     unsigned w = (unsigned)mp_obj_get_int(mp_args[4]);
     unsigned h = (unsigned)mp_obj_get_int(mp_args[5]);
-    unsigned _res = lodepng_convert(out, in, mode_out, mode_in, w, h);
+    unsigned _res = ((unsigned (*)(unsigned char *, const unsigned char *, const LodePNGColorMode *, const LodePNGColorMode *, unsigned, unsigned))lv_func_ptr)(out, in, mode_out, mode_in, w, h);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_convert_obj, 6, mp_lodepng_convert, lodepng_convert);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_convert_obj, 6, mp_lodepng_convert, lodepng_convert);
+    
 
 /*
  * lodepng extension definition for:
  * void lodepng_decoder_settings_init(LodePNGDecoderSettings *settings)
  */
  
-STATIC mp_obj_t mp_lodepng_decoder_settings_init(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_decoder_settings_init(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGDecoderSettings *settings = mp_write_ptr_LodePNGDecoderSettings(mp_args[0]);
-    lodepng_decoder_settings_init(settings);
+    ((void (*)(LodePNGDecoderSettings *))lv_func_ptr)(settings);
     return mp_const_none;
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decoder_settings_init_obj, 1, mp_lodepng_decoder_settings_init, lodepng_decoder_settings_init);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decoder_settings_init_obj, 1, mp_lodepng_decoder_settings_init, lodepng_decoder_settings_init);
+    
 
 /*
  * lodepng extension definition for:
  * void lodepng_state_init(LodePNGState *state)
  */
  
-STATIC mp_obj_t mp_lodepng_state_init(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_state_init(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGState *state = mp_write_ptr_LodePNGState(mp_args[0]);
-    lodepng_state_init(state);
+    ((void (*)(LodePNGState *))lv_func_ptr)(state);
     return mp_const_none;
 }
+
+ 
 
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_state_init_obj, 1, mp_lodepng_state_init, lodepng_state_init);
+    
+/* Reusing lodepng_state_init for lodepng_state_cleanup */
 
- 
-
-/*
- * lodepng extension definition for:
- * void lodepng_state_cleanup(LodePNGState *state)
- */
- 
-STATIC mp_obj_t mp_lodepng_state_cleanup(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    LodePNGState *state = mp_write_ptr_LodePNGState(mp_args[0]);
-    lodepng_state_cleanup(state);
-    return mp_const_none;
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_state_cleanup_obj, 1, mp_lodepng_state_cleanup, lodepng_state_cleanup);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_state_cleanup_obj, 1, mp_lodepng_state_init, lodepng_state_cleanup);
+    
 
 /*
  * lodepng extension definition for:
  * void lodepng_state_copy(LodePNGState *dest, const LodePNGState *source)
  */
  
-STATIC mp_obj_t mp_lodepng_state_copy(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_state_copy(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGState *dest = mp_write_ptr_LodePNGState(mp_args[0]);
     const LodePNGState *source = mp_write_ptr_LodePNGState(mp_args[1]);
-    lodepng_state_copy(dest, source);
+    ((void (*)(LodePNGState *, const LodePNGState *))lv_func_ptr)(dest, source);
     return mp_const_none;
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_state_copy_obj, 2, mp_lodepng_state_copy, lodepng_state_copy);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_state_copy_obj, 2, mp_lodepng_state_copy, lodepng_state_copy);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_decode(unsigned char **out, unsigned *w, unsigned *h, LodePNGState *state, const unsigned char *in, size_t insize)
  */
  
-STATIC mp_obj_t mp_lodepng_decode(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_decode(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned char **out = mp_to_ptr(mp_args[0]);
     unsigned *w = mp_to_ptr(mp_args[1]);
@@ -2182,377 +2056,300 @@ STATIC mp_obj_t mp_lodepng_decode(size_t mp_n_args, const mp_obj_t *mp_args)
     LodePNGState *state = mp_write_ptr_LodePNGState(mp_args[3]);
     const unsigned char *in = mp_to_ptr(mp_args[4]);
     size_t insize = (size_t)mp_obj_get_int(mp_args[5]);
-    unsigned _res = lodepng_decode(out, w, h, state, in, insize);
+    unsigned _res = ((unsigned (*)(unsigned char **, unsigned *, unsigned *, LodePNGState *, const unsigned char *, size_t))lv_func_ptr)(out, w, h, state, in, insize);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decode_obj, 6, mp_lodepng_decode, lodepng_decode);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_decode_obj, 6, mp_lodepng_decode, lodepng_decode);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_inspect(unsigned *w, unsigned *h, LodePNGState *state, const unsigned char *in, size_t insize)
  */
  
-STATIC mp_obj_t mp_lodepng_inspect(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_inspect(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned *w = mp_to_ptr(mp_args[0]);
     unsigned *h = mp_to_ptr(mp_args[1]);
     LodePNGState *state = mp_write_ptr_LodePNGState(mp_args[2]);
     const unsigned char *in = mp_to_ptr(mp_args[3]);
     size_t insize = (size_t)mp_obj_get_int(mp_args[4]);
-    unsigned _res = lodepng_inspect(w, h, state, in, insize);
+    unsigned _res = ((unsigned (*)(unsigned *, unsigned *, LodePNGState *, const unsigned char *, size_t))lv_func_ptr)(w, h, state, in, insize);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_inspect_obj, 5, mp_lodepng_inspect, lodepng_inspect);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_inspect_obj, 5, mp_lodepng_inspect, lodepng_inspect);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_inspect_chunk(LodePNGState *state, size_t pos, const unsigned char *in, size_t insize)
  */
  
-STATIC mp_obj_t mp_lodepng_inspect_chunk(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_inspect_chunk(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     LodePNGState *state = mp_write_ptr_LodePNGState(mp_args[0]);
     size_t pos = (size_t)mp_obj_get_int(mp_args[1]);
     const unsigned char *in = mp_to_ptr(mp_args[2]);
     size_t insize = (size_t)mp_obj_get_int(mp_args[3]);
-    unsigned _res = lodepng_inspect_chunk(state, pos, in, insize);
+    unsigned _res = ((unsigned (*)(LodePNGState *, size_t, const unsigned char *, size_t))lv_func_ptr)(state, pos, in, insize);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_inspect_chunk_obj, 4, mp_lodepng_inspect_chunk, lodepng_inspect_chunk);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_inspect_chunk_obj, 4, mp_lodepng_inspect_chunk, lodepng_inspect_chunk);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_chunk_length(const unsigned char *chunk)
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_length(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_length(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     const unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    unsigned _res = lodepng_chunk_length(chunk);
+    unsigned _res = ((unsigned (*)(const unsigned char *))lv_func_ptr)(chunk);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_length_obj, 1, mp_lodepng_chunk_length, lodepng_chunk_length);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_length_obj, 1, mp_lodepng_chunk_length, lodepng_chunk_length);
+    
 
 /*
  * lodepng extension definition for:
  * void lodepng_chunk_type(char type[5], const unsigned char *chunk)
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_type(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_type(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     char *type = mp_arr_to_char___5__(mp_args[0]);
     const unsigned char *chunk = mp_to_ptr(mp_args[1]);
-    lodepng_chunk_type(type, chunk);
+    ((void (*)(char [5], const unsigned char *))lv_func_ptr)(type, chunk);
     return mp_const_none;
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_type_obj, 2, mp_lodepng_chunk_type, lodepng_chunk_type);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_type_obj, 2, mp_lodepng_chunk_type, lodepng_chunk_type);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned char lodepng_chunk_type_equals(const unsigned char *chunk, const char *type)
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_type_equals(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_type_equals(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     const unsigned char *chunk = mp_to_ptr(mp_args[0]);
     const char *type = (char*)convert_from_str(mp_args[1]);
-    unsigned char _res = lodepng_chunk_type_equals(chunk, type);
+    unsigned char _res = ((unsigned char (*)(const unsigned char *, const char *))lv_func_ptr)(chunk, type);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_type_equals_obj, 2, mp_lodepng_chunk_type_equals, lodepng_chunk_type_equals);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_type_equals_obj, 2, mp_lodepng_chunk_type_equals, lodepng_chunk_type_equals);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned char lodepng_chunk_ancillary(const unsigned char *chunk)
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_ancillary(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_ancillary(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     const unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    unsigned char _res = lodepng_chunk_ancillary(chunk);
+    unsigned char _res = ((unsigned char (*)(const unsigned char *))lv_func_ptr)(chunk);
     return mp_obj_new_int_from_uint(_res);
 }
+
+ 
 
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_ancillary_obj, 1, mp_lodepng_chunk_ancillary, lodepng_chunk_ancillary);
+    
+/* Reusing lodepng_chunk_ancillary for lodepng_chunk_private */
 
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_private_obj, 1, mp_lodepng_chunk_ancillary, lodepng_chunk_private);
+    
+/* Reusing lodepng_chunk_ancillary for lodepng_chunk_safetocopy */
 
-/*
- * lodepng extension definition for:
- * unsigned char lodepng_chunk_private(const unsigned char *chunk)
- */
- 
-STATIC mp_obj_t mp_lodepng_chunk_private(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    unsigned char _res = lodepng_chunk_private(chunk);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_private_obj, 1, mp_lodepng_chunk_private, lodepng_chunk_private);
-
- 
-
-/*
- * lodepng extension definition for:
- * unsigned char lodepng_chunk_safetocopy(const unsigned char *chunk)
- */
- 
-STATIC mp_obj_t mp_lodepng_chunk_safetocopy(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    unsigned char _res = lodepng_chunk_safetocopy(chunk);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_safetocopy_obj, 1, mp_lodepng_chunk_safetocopy, lodepng_chunk_safetocopy);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_safetocopy_obj, 1, mp_lodepng_chunk_ancillary, lodepng_chunk_safetocopy);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned char *lodepng_chunk_data(unsigned char *chunk)
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_data(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_data(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    unsigned char * _res = lodepng_chunk_data(chunk);
+    unsigned char * _res = ((unsigned char *(*)(unsigned char *))lv_func_ptr)(chunk);
     return ptr_to_mp((void*)_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_data_obj, 1, mp_lodepng_chunk_data, lodepng_chunk_data);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_data_obj, 1, mp_lodepng_chunk_data, lodepng_chunk_data);
+    
 
 /*
  * lodepng extension definition for:
  * const unsigned char *lodepng_chunk_data_const(const unsigned char *chunk)
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_data_const(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_data_const(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     const unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    const unsigned char * _res = lodepng_chunk_data_const(chunk);
+    const unsigned char * _res = ((const unsigned char *(*)(const unsigned char *))lv_func_ptr)(chunk);
     return convert_to_str((void*)_res);
 }
 
+ 
+
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_data_const_obj, 1, mp_lodepng_chunk_data_const, lodepng_chunk_data_const);
+    
+/* Reusing lodepng_chunk_length for lodepng_chunk_check_crc */
 
- 
-
-/*
- * lodepng extension definition for:
- * unsigned lodepng_chunk_check_crc(const unsigned char *chunk)
- */
- 
-STATIC mp_obj_t mp_lodepng_chunk_check_crc(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    unsigned _res = lodepng_chunk_check_crc(chunk);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_check_crc_obj, 1, mp_lodepng_chunk_check_crc, lodepng_chunk_check_crc);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_check_crc_obj, 1, mp_lodepng_chunk_length, lodepng_chunk_check_crc);
+    
 
 /*
  * lodepng extension definition for:
  * void lodepng_chunk_generate_crc(unsigned char *chunk)
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_generate_crc(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_generate_crc(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    lodepng_chunk_generate_crc(chunk);
+    ((void (*)(unsigned char *))lv_func_ptr)(chunk);
     return mp_const_none;
 }
 
+ 
+
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_generate_crc_obj, 1, mp_lodepng_chunk_generate_crc, lodepng_chunk_generate_crc);
+    
+/* Reusing lodepng_chunk_data for lodepng_chunk_next */
 
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_next_obj, 1, mp_lodepng_chunk_data, lodepng_chunk_next);
+    
+/* Reusing lodepng_chunk_data_const for lodepng_chunk_next_const */
 
-/*
- * lodepng extension definition for:
- * unsigned char *lodepng_chunk_next(unsigned char *chunk)
- */
- 
-STATIC mp_obj_t mp_lodepng_chunk_next(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    unsigned char * _res = lodepng_chunk_next(chunk);
-    return ptr_to_mp((void*)_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_next_obj, 1, mp_lodepng_chunk_next, lodepng_chunk_next);
-
- 
-
-/*
- * lodepng extension definition for:
- * const unsigned char *lodepng_chunk_next_const(const unsigned char *chunk)
- */
- 
-STATIC mp_obj_t mp_lodepng_chunk_next_const(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    const unsigned char *chunk = mp_to_ptr(mp_args[0]);
-    const unsigned char * _res = lodepng_chunk_next_const(chunk);
-    return convert_to_str((void*)_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_next_const_obj, 1, mp_lodepng_chunk_next_const, lodepng_chunk_next_const);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_next_const_obj, 1, mp_lodepng_chunk_data_const, lodepng_chunk_next_const);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned char *lodepng_chunk_find(unsigned char *chunk, const unsigned char *end, const char type[5])
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_find(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_find(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned char *chunk = mp_to_ptr(mp_args[0]);
     const unsigned char *end = mp_to_ptr(mp_args[1]);
     const char *type = mp_arr_to_char___5__(mp_args[2]);
-    unsigned char * _res = lodepng_chunk_find(chunk, end, type);
+    unsigned char * _res = ((unsigned char *(*)(unsigned char *, const unsigned char *, const char [5]))lv_func_ptr)(chunk, end, type);
     return ptr_to_mp((void*)_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_find_obj, 3, mp_lodepng_chunk_find, lodepng_chunk_find);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_find_obj, 3, mp_lodepng_chunk_find, lodepng_chunk_find);
+    
 
 /*
  * lodepng extension definition for:
  * const unsigned char *lodepng_chunk_find_const(const unsigned char *chunk, const unsigned char *end, const char type[5])
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_find_const(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_find_const(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     const unsigned char *chunk = mp_to_ptr(mp_args[0]);
     const unsigned char *end = mp_to_ptr(mp_args[1]);
     const char *type = mp_arr_to_char___5__(mp_args[2]);
-    const unsigned char * _res = lodepng_chunk_find_const(chunk, end, type);
+    const unsigned char * _res = ((const unsigned char *(*)(const unsigned char *, const unsigned char *, const char [5]))lv_func_ptr)(chunk, end, type);
     return convert_to_str((void*)_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_find_const_obj, 3, mp_lodepng_chunk_find_const, lodepng_chunk_find_const);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_find_const_obj, 3, mp_lodepng_chunk_find_const, lodepng_chunk_find_const);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_chunk_append(unsigned char **out, size_t *outlength, const unsigned char *chunk)
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_append(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_append(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned char **out = mp_to_ptr(mp_args[0]);
     size_t *outlength = mp_to_ptr(mp_args[1]);
     const unsigned char *chunk = mp_to_ptr(mp_args[2]);
-    unsigned _res = lodepng_chunk_append(out, outlength, chunk);
+    unsigned _res = ((unsigned (*)(unsigned char **, size_t *, const unsigned char *))lv_func_ptr)(out, outlength, chunk);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_append_obj, 3, mp_lodepng_chunk_append, lodepng_chunk_append);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_append_obj, 3, mp_lodepng_chunk_append, lodepng_chunk_append);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_chunk_create(unsigned char **out, size_t *outlength, unsigned length, const char *type, const unsigned char *data)
  */
  
-STATIC mp_obj_t mp_lodepng_chunk_create(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_chunk_create(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     unsigned char **out = mp_to_ptr(mp_args[0]);
     size_t *outlength = mp_to_ptr(mp_args[1]);
     unsigned length = (unsigned)mp_obj_get_int(mp_args[2]);
     const char *type = (char*)convert_from_str(mp_args[3]);
     const unsigned char *data = mp_to_ptr(mp_args[4]);
-    unsigned _res = lodepng_chunk_create(out, outlength, length, type, data);
+    unsigned _res = ((unsigned (*)(unsigned char **, size_t *, unsigned, const char *, const unsigned char *))lv_func_ptr)(out, outlength, length, type, data);
     return mp_obj_new_int_from_uint(_res);
 }
 
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_create_obj, 5, mp_lodepng_chunk_create, lodepng_chunk_create);
-
  
+
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_chunk_create_obj, 5, mp_lodepng_chunk_create, lodepng_chunk_create);
+    
 
 /*
  * lodepng extension definition for:
  * unsigned lodepng_crc32(const unsigned char *buf, size_t len)
  */
  
-STATIC mp_obj_t mp_lodepng_crc32(size_t mp_n_args, const mp_obj_t *mp_args)
+STATIC mp_obj_t mp_lodepng_crc32(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     const unsigned char *buf = mp_to_ptr(mp_args[0]);
     size_t len = (size_t)mp_obj_get_int(mp_args[1]);
-    unsigned _res = lodepng_crc32(buf, len);
+    unsigned _res = ((unsigned (*)(const unsigned char *, size_t))lv_func_ptr)(buf, len);
     return mp_obj_new_int_from_uint(_res);
 }
+
+ 
 
 STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_crc32_obj, 2, mp_lodepng_crc32, lodepng_crc32);
+    
+/* Reusing funcptr_custom_zlib for lodepng_inflate */
 
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_inflate_obj, 5, mp_funcptr_custom_zlib, lodepng_inflate);
+    
+/* Reusing funcptr_custom_zlib for lodepng_zlib_decompress */
 
-/*
- * lodepng extension definition for:
- * unsigned lodepng_inflate(unsigned char **out, size_t *outsize, const unsigned char *in, size_t insize, const LodePNGDecompressSettings *settings)
- */
- 
-STATIC mp_obj_t mp_lodepng_inflate(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    unsigned char **out = mp_to_ptr(mp_args[0]);
-    size_t *outsize = mp_to_ptr(mp_args[1]);
-    const unsigned char *in = mp_to_ptr(mp_args[2]);
-    size_t insize = (size_t)mp_obj_get_int(mp_args[3]);
-    const LodePNGDecompressSettings *settings = mp_write_ptr_LodePNGDecompressSettings(mp_args[4]);
-    unsigned _res = lodepng_inflate(out, outsize, in, insize, settings);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_inflate_obj, 5, mp_lodepng_inflate, lodepng_inflate);
-
- 
-
-/*
- * lodepng extension definition for:
- * unsigned lodepng_zlib_decompress(unsigned char **out, size_t *outsize, const unsigned char *in, size_t insize, const LodePNGDecompressSettings *settings)
- */
- 
-STATIC mp_obj_t mp_lodepng_zlib_decompress(size_t mp_n_args, const mp_obj_t *mp_args)
-{
-    unsigned char **out = mp_to_ptr(mp_args[0]);
-    size_t *outsize = mp_to_ptr(mp_args[1]);
-    const unsigned char *in = mp_to_ptr(mp_args[2]);
-    size_t insize = (size_t)mp_obj_get_int(mp_args[3]);
-    const LodePNGDecompressSettings *settings = mp_write_ptr_LodePNGDecompressSettings(mp_args[4]);
-    unsigned _res = lodepng_zlib_decompress(out, outsize, in, insize, settings);
-    return mp_obj_new_int_from_uint(_res);
-}
-
-STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_zlib_decompress_obj, 5, mp_lodepng_zlib_decompress, lodepng_zlib_decompress);
-
- 
+STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lodepng_zlib_decompress_obj, 5, mp_funcptr_custom_zlib, lodepng_zlib_decompress);
+    
 
 /*
  * lodepng lodepng_default_decompress_settings global definitions

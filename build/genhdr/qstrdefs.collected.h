@@ -1906,6 +1906,8 @@ Q(SIZE)
 
 Q(SIZE)
 
+Q(SIZE)
+
 Q(SKIP_LAST_TICK)
 
 Q(SLIDER)
@@ -2321,6 +2323,8 @@ Q(__delattr__)
 Q(__delitem__)
 
 Q(__delitem__)
+
+Q(__dereference__)
 
 Q(__dereference__)
 
@@ -3329,6 +3333,10 @@ Q(cast)
 Q(cast)
 
 Q(cast)
+
+Q(cast)
+
+Q(cast_instance)
 
 Q(cast_instance)
 
@@ -6146,8 +6154,6 @@ Q(lv_anim_t_ready_cb)
 
 Q(lv_anim_t_ready_cb)
 
-Q(lv_anim_t_ready_cb)
-
 Q(lv_anim_t_start_cb)
 
 Q(lv_anim_t_start_cb)
@@ -6743,10 +6749,6 @@ Q(param)
 Q(partition)
 
 Q(partition)
-
-Q(path)
-
-Q(path)
 
 Q(path)
 
@@ -7373,8 +7375,6 @@ Q(set_cell_merge_right)
 Q(set_cell_type)
 
 Q(set_cell_value)
-
-Q(set_cell_value_fmt)
 
 Q(set_checkable)
 
@@ -8049,10 +8049,6 @@ Q(set_text_blend_mode)
 Q(set_text_color)
 
 Q(set_text_decor)
-
-Q(set_text_fmt)
-
-Q(set_text_fmt)
 
 Q(set_text_font)
 
