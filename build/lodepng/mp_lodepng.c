@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "py/obj.h"
+#include "py/objint.h"
 #include "py/objstr.h"
 #include "py/runtime.h"
 #include "py/binary.h"
@@ -572,6 +573,19 @@ STATIC mp_obj_t mp_lv_funcptr(const mp_lv_obj_fun_builtin_var_t *mp_fun, void *l
     *funcptr = *mp_fun;
     funcptr->lv_fun = lv_fun;
     return MP_OBJ_FROM_PTR(funcptr);
+}
+
+// Missing implementation for 64bit integer conversion
+
+STATIC unsigned long long mp_obj_get_ull(mp_obj_t obj)
+{
+    if (mp_obj_is_small_int(obj))
+        return MP_OBJ_SMALL_INT_VALUE(obj);
+
+    unsigned long long val = 0;
+    bool big_endian = !(__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__);
+    mp_obj_int_to_bytes_impl(obj, big_endian, sizeof(val), (byte*)&val);
+    return val;
 }
 
 

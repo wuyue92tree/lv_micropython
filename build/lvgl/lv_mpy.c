@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "py/obj.h"
+#include "py/objint.h"
 #include "py/objstr.h"
 #include "py/runtime.h"
 #include "py/binary.h"
@@ -582,6 +583,19 @@ STATIC mp_obj_t mp_lv_funcptr(const mp_lv_obj_fun_builtin_var_t *mp_fun, void *l
     *funcptr = *mp_fun;
     funcptr->lv_fun = lv_fun;
     return MP_OBJ_FROM_PTR(funcptr);
+}
+
+// Missing implementation for 64bit integer conversion
+
+STATIC unsigned long long mp_obj_get_ull(mp_obj_t obj)
+{
+    if (mp_obj_is_small_int(obj))
+        return MP_OBJ_SMALL_INT_VALUE(obj);
+
+    unsigned long long val = 0;
+    bool big_endian = !(__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__);
+    mp_obj_int_to_bytes_impl(obj, big_endian, sizeof(val), (byte*)&val);
+    return val;
 }
 
 
@@ -25052,7 +25066,7 @@ STATIC MP_DEFINE_CONST_LV_FUN_OBJ_STATIC_VAR(mp_lv_debug_check_str_obj, 1, mp_lv
 STATIC mp_obj_t mp_lv_debug_log_error(size_t mp_n_args, const mp_obj_t *mp_args, void *lv_func_ptr)
 {
     const char *msg = (char*)convert_from_str(mp_args[0]);
-    uint64_t value = (int)mp_obj_get_int(mp_args[1]);
+    uint64_t value = (uint64_t)mp_obj_get_ull(mp_args[1]);
     ((void (*)(const char *, uint64_t))lv_func_ptr)(msg, value);
     return mp_const_none;
 }
