@@ -26,18 +26,24 @@
 
 #include "library.h"
 #include "mphalport.h"
+#include <emscripten.h>
 
 void mp_hal_stdout_tx_strn(const char *str, size_t len) {
     mp_js_write(str, len);
 }
 
 void mp_hal_delay_ms(mp_uint_t ms) {
-    uint32_t start = mp_hal_ticks_ms();
-    while (mp_hal_ticks_ms() - start < ms) {
-    }
+    emscripten_sleep(ms);
 }
 
 void mp_hal_delay_us(mp_uint_t us) {
+    /* first sleep for as many ms as possible */
+    mp_uint_t ms_to_sleep = (us / 1000);
+    if(ms_to_sleep > 0) {
+        emscripten_sleep(ms_to_sleep);
+        us -= (ms_to_sleep * 1000);
+    }
+    /* busy-wait the remaining time */
     uint32_t start = mp_hal_ticks_us();
     while (mp_hal_ticks_us() - start < us) {
     }
@@ -59,4 +65,12 @@ extern int mp_interrupt_char;
 
 int mp_hal_get_interrupt_char(void) {
     return mp_interrupt_char;
+}
+
+void mp_hal_move_cursor_back(uint pos)
+{
+	mp_hal_stdout_tx_strn("\b", 1);
+}
+void mp_hal_erase_line_from_cursor(uint pos)
+{
 }
