@@ -267,6 +267,7 @@ function getEditorValue() {
 }
 function setEditorValue(val) {
     editor.setValue(val);
+    onResize();
 }
 /* END MONACO COMPAT */
 window.runScript = function() {
@@ -293,6 +294,7 @@ window.reenableButton = function() {
     $("#run-button").removeProp('disabled');
     if(term != undefined && term != null)
         term.setOption('disableStdin', false);
+    onResize();
 }
 function get_iframe_url() {
     /* Assemble the URL */
@@ -466,7 +468,7 @@ $(window).load(function() {
         if ( xterm_helper(term, key) ) {
             for(var i = 0; i < key.length; i++) {
                 if(iframe.contentWindow !== null)
-                    iframe.contentWindow.mp_js_process_char(key.charCodeAt(i));
+                    iframe.contentWindow.process_char(key.charCodeAt(i));
             }
         }
     });
@@ -512,8 +514,9 @@ $(window).load(function() {
     } else
         runScript();
 });
-$(window).resize(function() {
+$(window).resize(onResize);
+function onResize() {
     editor.layout();
     //editor.resize();
     term.fit();
-});
+}

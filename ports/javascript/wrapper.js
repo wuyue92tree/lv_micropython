@@ -42,9 +42,10 @@ var mainProgram = function()
   mp_js_init = Module.cwrap('mp_js_init', 'null', ['number']);
   mp_js_do_str = Module.cwrap('mp_js_do_str', 'null', ['string']);
   mp_js_init_repl = Module.cwrap('mp_js_init_repl', 'null', ['null']);
-  mp_js_process_char = Module.cwrap('mp_js_process_char', 'number', ['number']);
+  mp_js_process_char = Module.cwrap('mp_js_process_char', 'number', ['number'], { async: true });
 
   MP_JS_EPOCH = (new Date()).getTime();
+  window.startRunning();
 
   if (typeof window === 'undefined' && require.main === module) {
       var fs = require('fs');

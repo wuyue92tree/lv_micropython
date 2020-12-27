@@ -112,9 +112,9 @@
 			/* Load the screen */
 			"lv.scr_load(scr)"
 		];
-    	
+                var inputChars = [];
 		/*Initialization function*/
-		function startRunning() {
+		window.startRunning = function() {
 			/*Setup printing event handler*/
 
 			mp_js_stdout = window.parent.document.getElementById("mp_js_stdout");
@@ -122,31 +122,33 @@
 				throw "Could not retrieve parent element";
 			}
 			/*Initialize MicroPython itself*/
-			mp_js_init(1 * 1024 * 1024); 
+			mp_js_init(8 * 1024 * 1024); 
 
 			var compressedScript = window.parent.document.getElementById("emscripten-iframe").getAttribute("data-cscript");
 			if(compressedScript !== undefined && compressedScript !== null)
 				decompressScript(compressedScript);
 
 			/*Setup lv_task_handler loop*/
-			var the_mp_handle_pending = Module.cwrap('mp_handle_pending', null);
-			function handle_pending() {
-				the_mp_handle_pending();
-				setTimeout(handle_pending, 10);
+			var the_mp_handle_pending = Module.cwrap('mp_handle_pending', null, [], { async: true });
+			async function handle_pending() {
+                                var startTime = performance.now();
+                                while(inputChars.length > 0) {
+                                    c = inputChars.shift();
+                                    await mp_js_process_char(c);
+                                }
+				await the_mp_handle_pending();
+                                /* Run within 5 seconds */
+                                setTimeout(handle_pending, Math.max(0, 5-(performance.now()-startTime)));
 			}
 			/*Initialize the REPL.*/
-            mp_js_init_repl();
+                        mp_js_init_repl();
 			/*Start the main loop, asynchronously.*/
 			handle_pending();
 			window.top.reenableButton();
 		}
-		window.onload = function() {
-			console.log("onload");
-			
-			startRunning();
-		}
-
-
+                window.process_char = function(c) {
+                    inputChars.push(c);
+                }
     </script>
   </body>
 </html>
