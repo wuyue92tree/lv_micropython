@@ -45,7 +45,7 @@ var mainProgram = function()
   mp_js_process_char = Module.cwrap('mp_js_process_char', 'number', ['number'], { async: true });
 
   MP_JS_EPOCH = (new Date()).getTime();
-  window.startRunning();
+  setTimeout(() => window.startRunning(), 0);
 
   if (typeof window === 'undefined' && require.main === module) {
       var fs = require('fs');

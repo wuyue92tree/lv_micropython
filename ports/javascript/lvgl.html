@@ -28,7 +28,19 @@
 			else
 				return prevQuery(selector);
 		}
-		var mp_js_stdout;
+        var mp_js_stdout;
+        var currentSleepingResolve = null;
+        window.do_sleep_with_intr = function(ms, cb) {
+            var i = setTimeout(() => {
+                currentSleepingResolve = null;
+                cb(0);
+            }, ms);
+            currentSleepingResolve = function() {
+                clearTimeout(i);
+                currentSleepingResolve = null;
+                cb(1);
+            };
+        }
 		/*Write text to the terminal */
 		function sendText(text) {
 			var print = new Event('print');
@@ -129,16 +141,34 @@
 				decompressScript(compressedScript);
 
 			/*Setup lv_task_handler loop*/
-			var the_mp_handle_pending = Module.cwrap('mp_handle_pending', null, [], { async: true });
+            var the_mp_handle_pending = Module.cwrap('mp_handle_pending', null, [], { async: true });
+            var lastPromise = null;
 			async function handle_pending() {
-                                var startTime = performance.now();
-                                while(inputChars.length > 0) {
-                                    c = inputChars.shift();
-                                    await mp_js_process_char(c);
-                                }
-				await the_mp_handle_pending();
-                                /* Run within 5 seconds */
-                                setTimeout(handle_pending, Math.max(0, 5-(performance.now()-startTime)));
+                var startTime = performance.now();
+                while(inputChars.length > 0) {
+                    c = inputChars.shift();
+                    if(c == 3 && currentSleepingResolve != null) {
+                        currentSleepingResolve();
+                        if(lastPromise != null) {
+                            await lastPromise;
+                            lastPromise = null;
+                        }
+                    } else {
+                        if(lastPromise != null) {
+                            await lastPromise;
+                            lastPromise = null;
+                        }
+                        lastPromise = mp_js_process_char(c);
+                    }
+                }
+                
+                if(currentSleepingResolve == null) {
+                    if(lastPromise != null) {
+                        await lastPromise;
+                    }
+                    lastPromise = the_mp_handle_pending();
+                }
+                setTimeout(handle_pending, Math.max(0, 5-(performance.now()-startTime)));
 			}
 			/*Initialize the REPL.*/
                         mp_js_init_repl();

@@ -28,19 +28,30 @@
 #include "mphalport.h"
 #include <emscripten.h>
 
+
+EM_JS(void, mp_js_sleep_with_intr, (int ms), {
+  Asyncify.handleSleep(wakeUp => {
+    window.do_sleep_with_intr(ms, (i) => {
+        if(i == 1)
+            Module.ccall('mp_keyboard_interrupt', 'null', ['null'], ['null']);
+        wakeUp();
+    });
+  });
+});
+
 void mp_hal_stdout_tx_strn(const char *str, size_t len) {
     mp_js_write(str, len);
 }
 
 void mp_hal_delay_ms(mp_uint_t ms) {
-    emscripten_sleep(ms);
+    mp_js_sleep_with_intr(ms);
 }
 
 void mp_hal_delay_us(mp_uint_t us) {
     /* first sleep for as many ms as possible */
     mp_uint_t ms_to_sleep = (us / 1000);
     if(ms_to_sleep > 0) {
-        emscripten_sleep(ms_to_sleep);
+        mp_js_sleep_with_intr(ms_to_sleep);
         us -= (ms_to_sleep * 1000);
     }
     /* busy-wait the remaining time */

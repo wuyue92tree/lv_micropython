@@ -33,7 +33,7 @@ LDFLAGS = -m32 -Wl,--gc-sections
 
 #Debugging/Optimization
 ifeq ($(DEBUG), 1)
-CFLAGS += -O0 -g4
+CFLAGS += -O0 -g3
 else
 CFLAGS += -O3 -g0 -DNDEBUG
 endif
@@ -41,7 +41,7 @@ endif
 CFLAGS += -fdata-sections -ffunction-sections
 CFLAGS += $(CFLAGS_MOD)
 
-JSFLAGS += -s USE_SDL=2 -s WASM=1 -s ASYNCIFY=1
+JSFLAGS += -s USE_SDL=2 -s WASM=0 -s ASYNCIFY=1 -s 'ASYNCIFY_IMPORTS=["mp_js_sleep_with_intr"]'
 JSFLAGS += --memory-init-file 0 --js-library library.js
 JSFLAGS += -s EXTRA_EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']"
 JSFLAGS += -s EXPORTED_FUNCTIONS="['_mp_js_init', '_mp_js_init_repl', '_mp_js_do_str', '_mp_js_process_char', '_mp_hal_get_interrupt_char', '_mp_keyboard_interrupt', '_mp_handle_pending' ]" 
@@ -126,7 +126,7 @@ $(BUILD)/micropython.js: $(OBJ) library.js wrapper.js
 	$(Q)emcc $(LDFLAGS) -o $(BUILD)/firmware.js $(OBJ) $(JSFLAGS)
 	cat wrapper.js $(BUILD)/firmware.js > $@
 	cp $@ $(BUILD)/../lvgl_mp.js
-	[ -e $(BUILD)/firmware.wasm ] && cp $(BUILD)/firmware.wasm $(BUILD)/../firmware.wasm
+	([ -e $(BUILD)/firmware.wasm ] && cp $(BUILD)/firmware.wasm $(BUILD)/../firmware.wasm); true
 
 min: $(BUILD)/micropython.js
 	uglifyjs $< -c -o $(BUILD)/micropython.min.js

@@ -29,6 +29,8 @@
 // options to control how MicroPython is built
 
 // options to control how Micro Python is built
+#define MICROPY_PY_UASYNCIO            (1)
+
 #define MICROPY_QSTR_BYTES_IN_HASH  (1)
 #define MICROPY_ERROR_REPORTING     (MICROPY_ERROR_REPORTING_TERSE)
 #define MICROPY_CPYTHON_COMPAT      (1)
