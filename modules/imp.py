@@ -1,4 +1,4 @@
-import sys
+import usys as sys
 import builtins
 import types
 

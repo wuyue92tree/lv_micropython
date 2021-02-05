@@ -410,7 +410,7 @@ function setupPythonEditor() {
         value: `
 # Initialize 
 
-import imp, sys
+import imp, usys as sys
 sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/master/lib')
 import display_driver
 import lvgl as lv
