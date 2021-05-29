@@ -50,7 +50,7 @@ __pycache__/
 GNUmakefile
 user.props
 ports/javascript/node_modules
-
+ports/javascript/*bundle_out
 # Generated rst files
 ######################
 genrst/

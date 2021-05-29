@@ -284,7 +284,7 @@ window.runScript = function() {
     iframe.setAttribute("data-cscript", LZString.compressToEncodedURIComponent(getEditorValue()));
 
     clear_iframe(iframe);
-    iframe.src = get_iframe_url() /*+ "&timestamp=" + new Date().getTime()*/;
+    iframe.src = "lvgl.html"; /*+ "&timestamp=" + new Date().getTime()*/;
     iframe.contentWindow.location.href = iframe.src;
     console.log("Iframe src: " + iframe.src, "top", window.parent);
     term.setOption('disableStdin', true);
@@ -411,7 +411,7 @@ function setupPythonEditor() {
 # Initialize 
 
 import imp, usys as sys
-sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/master/lib')
+sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/dev-8.0/lib')
 import display_driver
 import lvgl as lv
 
@@ -419,7 +419,7 @@ import lvgl as lv
 
 scr = lv.obj()
 btn = lv.btn(scr)
-btn.align(scr, lv.ALIGN.CENTER, 0, 0)
+btn.align(lv.ALIGN.CENTER, 0, 0)
 label = lv.label(btn)
 label.set_text('Hello World!')
 lv.scr_load(scr)

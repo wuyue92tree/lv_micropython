@@ -7,9 +7,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "clean": "rm -rf bundle_out/* && ./build_workers.sh",
-    "bundle": "parcel build frontend.html -o index.html -d bundle_out --no-source-maps --public-url ./",
-    "dev": "parcel frontend.html -o index.html -d bundle_out --no-source-maps --public-url ./",
+    "clean": "rm -rf parcel_bundle_out/* && ./build_workers.sh",
+    "bundle": "mkdir -p bundle_out && parcel build frontend.html -o index.html -d parcel_bundle_out --no-source-maps --public-url ./ && mv parcel_bundle_out/* bundle_out && cp docs/wasm_file_api.js lvgl.html bundle_out/",
+    "dev": "parcel frontend.html -o index.html -d parcel_bundle_out --no-source-maps --public-url ./",
     "build:wasm": "make -j4"
   },
   "repository": {
