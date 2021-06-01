@@ -32,14 +32,14 @@ jobs:
         run: git submodule update --init --recursive  
       - name: Build mpy-cross
         run: make -j $(nproc) -C mpy-cross
-      - name: Build the javascript port
-        run: make -j $(nproc) -C ports/javascript
       - name: Install node modules
         run: npm install
         working-directory: ports/javascript
       - name: Build workers
         run: npm run clean
         working-directory: ports/javascript
+      - name: Build the javascript port
+        run: make -j $(nproc) -C ports/javascript
       - name: Build frontend
         run: npm run bundle
         working-directory: ports/javascript
