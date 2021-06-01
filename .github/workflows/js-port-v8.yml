@@ -29,7 +29,7 @@ jobs:
       - name: Build SDL2
         run: embuilder build sdl2
       - name: Update submodules
-        run: git submodule update --init --recursive  
+        run: make -j $(nproc) -C ports/javascript submodules
       - name: Build mpy-cross
         run: make -j $(nproc) -C mpy-cross
       - name: Install node modules

@@ -199,7 +199,9 @@ clean-prog:
 endif
 
 submodules:
-	$(ECHO) "Updating submodules: $(GIT_SUBMODULES)"
+	$(ECHO) "Updating submodules: lib/lv_bindings $(GIT_SUBMODULES)"
+# LVGL tweak for JS port
+	$(Q)git submodule update --init --recursive $(TOP)/lib/lv_bindings
 ifneq ($(GIT_SUBMODULES),)
 	$(Q)git submodule update --init $(addprefix $(TOP)/,$(GIT_SUBMODULES))
 endif
