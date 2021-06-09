@@ -16,6 +16,7 @@ jobs:
         with:
           persist-credentials: false
           ref: 'lvgl_javascript_v8'
+          fetch-depth: 0
       - name: Setup cache
         id: cache-system-libraries
         uses: actions/cache@v2
