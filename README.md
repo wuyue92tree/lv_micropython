@@ -3,12 +3,20 @@
 ![Build lv_micropython unix port](https://github.com/lvgl/lv_micropython/workflows/Build%20lv_micropython%20unix%20port/badge.svg)
 ![Build lv_micropython stm32 port](https://github.com/lvgl/lv_micropython/workflows/Build%20lv_micropython%20stm32%20port/badge.svg)
 
-**For information abound Micropython lvgl bindings please refrer to [lv_bindings/README.md](https://github.com/lvgl/lv_bindings/blob/master/README.md)**
+**For information abound Micropython lvgl bindings please refrer to [lv_binding_micropython/README.md](https://github.com/lvgl/lv_binding_micropython/blob/master/README.md)**
 
 See also [Micropython + LittlevGL](https://blog.lvgl.io/2019-02-20/micropython-bindings) blog post. (LittlevGL is LVGL's previous name.)
 For questions and discussions - please use the forum: https://forum.lvgl.io/c/micropython
 
 Original micropython README: https://github.com/micropython/micropython/blob/master/README.md
+
+## Relationship between `lv_micropython` and `lv_binding_micropython`
+
+Originally, `lv_micropython` was created as an example of how to use [lv_binding_micropython](https://github.com/lvgl/lv_binding_micropython) on a Micropython fork.
+As such, we try to keep changes here as minimal as possible and we try to keep it in sync with Micropython upstream releases. We also try to add changes to `lv_binding_micropython` instead of to `lv_micropython`, when possible. (for example we keep all drivers in `lv_binding_micropython`, the ESP32 CMake functionality etc.)
+
+Eventually it turned out that many people prefer using `lv_micropython` directly and only a few use it as a reference to support LVGL on their own Micropython fork.  
+If you are only starting with Micropython+LVGL, it's recommended that you use `lv_micropython`, while porting a Micropython fork to LVGL is for advanced users.
 
 ## Build Instructions
 
@@ -154,7 +162,7 @@ More info about LVGL:
 - GitHub: https://github.com/lvgl/lvgl
 
 More info about lvgl Micropython bindings:
-- https://github.com/lvgl/lv_bindings/blob/master/README.md
+- https://github.com/lvgl/lv_binding_micropython/blob/master/README.md
 
 Discussions about the Microptyhon binding: https://github.com/lvgl/lvgl/issues/557
 
