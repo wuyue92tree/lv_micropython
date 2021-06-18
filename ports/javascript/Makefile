@@ -44,7 +44,7 @@ CFLAGS += $(CFLAGS_MOD)
 JSFLAGS += -s USE_SDL=2 -s WASM=0 -s ASYNCIFY=1 -s 'ASYNCIFY_IMPORTS=["mp_js_sleep_with_intr"]'
 JSFLAGS += --memory-init-file 0 --js-library library.js
 JSFLAGS += -s EXTRA_EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']"
-JSFLAGS += -s EXPORTED_FUNCTIONS="['_mp_js_init', '_mp_js_init_repl', '_mp_js_do_str', '_mp_js_process_char', '_mp_hal_get_interrupt_char', '_mp_keyboard_interrupt', '_mp_handle_pending' ]" 
+JSFLAGS += -s EXPORTED_FUNCTIONS="['_mp_js_init', '_mp_js_init_repl', '_mp_js_do_str', '_mp_js_process_char', '_mp_hal_get_interrupt_char', '_mp_sched_keyboard_interrupt', '_mp_handle_pending' ]" 
 
 #ifdef EMSCRIPTEN
 	# only for profiling, remove -s EMTERPRETIFY_ADVISE=1 when your EMTERPRETIFY_WHITELIST is ok
