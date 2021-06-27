@@ -10,10 +10,6 @@ include ../../py/mkenv.mk
 
 CROSS = 0
 
-
-
-
-
 QSTR_DEFS = qstrdefsport.h
 
 include $(TOP)/py/py.mk
@@ -22,52 +18,24 @@ INC += -I.
 INC += -I$(TOP)
 INC += -I$(BUILD)
 
-
 #LDFLAGS ?= -m32 -Wl,--gc-sections
 #CFLAGS ?= -m32
 
 #default debug options for browser debugger
 JSFLAGS ?= --source-map-base http://localhost:8000
-CFLAGS = -m32 -Wall -Werror -Wno-error=missing-braces -Wdouble-promotion -Wfloat-conversion $(INC) -std=gnu99 $(COPT)
-LDFLAGS = -m32 -Wl,--gc-sections
 
-#Debugging/Optimization
-ifeq ($(DEBUG), 1)
-CFLAGS += -O0 -g3
-else
-CFLAGS += -O3 -g0 -DNDEBUG
-endif
+CFLAGS += -std=gnu99 -Wall -Werror -Wdouble-promotion -Wfloat-conversion
+CFLAGS += -O3 -DNDEBUG -g4
+LDFLAGS += -g4
+CFLAGS += $(INC)
 
 CFLAGS += -fdata-sections -ffunction-sections
 CFLAGS += $(CFLAGS_MOD)
 
-JSFLAGS += -s USE_SDL=2 -s WASM=0 -s ASYNCIFY=1 -s 'ASYNCIFY_IMPORTS=["mp_js_sleep_with_intr"]'
-JSFLAGS += --memory-init-file 0 --js-library library.js
-JSFLAGS += -s EXTRA_EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']"
-JSFLAGS += -s EXPORTED_FUNCTIONS="['_mp_js_init', '_mp_js_init_repl', '_mp_js_do_str', '_mp_js_process_char', '_mp_hal_get_interrupt_char', '_mp_sched_keyboard_interrupt', '_mp_handle_pending' ]" 
-
-#ifdef EMSCRIPTEN
-	# only for profiling, remove -s EMTERPRETIFY_ADVISE=1 when your EMTERPRETIFY_WHITELIST is ok
-	# not using an emterpreting list *is* bad and will lead to poor performance and huge binary.
-ifdef ASYNC
-	CFLAGS += -D__EMTERPRETER__=1 
-	CFLAGS += -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 -s 'EMTERPRETIFY_FILE="micropython.binary"'
-	CFLAGS += -s EMTERPRETIFY_SYNCLIST='["_mp_execute_bytecode"]' -s EMTERPRETIFY_ADVISE=1
-endif
-
-CC = emcc $(JSFLAGS)
-LD = emcc $(JSFLAGS)
+CC = emcc
+LD = emcc
+# TODO: figure out why this hack is needed
 CPP := emcc -x c -E -D__CPP__ -D__EMSCRIPTEN__
-#else
-#	ifdef CLANG
-#		CC=clang
-#		CPP=clang -E -D__CPP__
-#	else
-#		CC = gcc
-#		CPP = gcc -E -D__CPP__
-#	endif
-#endif
-
 
 
 SRC_LIB = $(addprefix lib/,\
@@ -114,10 +82,13 @@ SRC_C += $(SRC_MOD)
 
 SRC_QSTR += $(SRC_C) $(SRC_LIB) $(LIB_SRC_C)
 
-OBJ = $(PY_O) 
+OBJ += $(PY_O)
 OBJ += $(addprefix $(BUILD)/, $(SRC_LIB:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(LIB_SRC_C:.c=.o))
+
+JSFLAGS += -s ASYNCIFY -s 'ASYNCIFY_IMPORTS=["mp_js_sleep_with_intr"]' -s WASM=1 -s USE_SDL=2
+JSFLAGS += -s EXPORTED_FUNCTIONS="['_mp_js_init', '_mp_js_init_repl', '_mp_js_do_str', '_mp_js_process_char', '_mp_hal_get_interrupt_char', '_mp_sched_keyboard_interrupt', '_mp_handle_pending']" -s EXTRA_EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']" -s --memory-init-file 0 --js-library library.js
 
 all: $(BUILD)/micropython.js
 
@@ -128,12 +99,13 @@ $(BUILD)/micropython.js: $(OBJ) library.js wrapper.js
 	$(Q)mkdir -p $(BUILD)/../bundle_out
 	cp $@ $(BUILD)/../bundle_out/lvgl_mp.js
 	([ -e $(BUILD)/firmware.wasm ] && cp $(BUILD)/firmware.wasm $(BUILD)/../bundle_out/firmware.wasm); true
+	([ -e $(BUILD)/firmware.wasm.map ] && cp $(BUILD)/firmware.wasm.map $(BUILD)/../bundle_out/firmware.wasm.map); true
 
 min: $(BUILD)/micropython.js
 	uglifyjs $< -c -o $(BUILD)/micropython.min.js
 
 test: $(BUILD)/micropython.js $(TOP)/tests/run-tests.py
 	$(eval DIRNAME=ports/$(notdir $(CURDIR)))
-	cd $(TOP)/tests && MICROPY_MICROPYTHON=../ports/javascript/node_run.sh ./run-tests.py
+	cd $(TOP)/tests && MICROPY_MICROPYTHON=../ports/javascript/node_run.sh ./run-tests.py -j1
 
 include $(TOP)/py/mkrules.mk
