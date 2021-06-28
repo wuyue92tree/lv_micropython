@@ -141,7 +141,7 @@ function load_revision(revision, update_history, cb) {
             if(timeout != null) {
                 clearTimeout(timeout);
             }
-            if($(this).data("modal-shown"))
+            if($modal.data("modal-shown"))
                 $modal.modal('hide');
             else
                 $modal.one("shown.bs.modal", () => $modal.modal('hide'));
