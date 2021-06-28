@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rm -rf parcel_bundle_out/* && ./build_workers.sh",
     "bundle": "mkdir -p bundle_out && parcel build frontend.html -o index.html -d parcel_bundle_out --no-source-maps --public-url ./ && mv parcel_bundle_out/* bundle_out && cp docs/wasm_file_api.js lvgl.html bundle_out/",
-    "dev": "parcel frontend.html -o index.html -d parcel_bundle_out --no-source-maps --public-url ./",
+    "dev": "parcel watch frontend.html -o index.html -d bundle_out --no-source-maps --public-url ./",
     "build:wasm": "make -j4"
   },
   "repository": {
@@ -27,6 +27,10 @@
   },
   "dependencies": {
     "browserslist": "^4.8.6",
-    "monaco-editor": "^0.19.3"
+    "debounce": "^1.2.1",
+    "golden-layout": "^2.2.1",
+    "monaco-editor": "^0.19.3",
+    "xterm": "^4.13.0",
+    "xterm-addon-fit": "^0.5.0"
   }
 }
