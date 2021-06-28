@@ -405,7 +405,7 @@ $(window).load(function () {
         let ed = null;
         const onResize = debounce(() => {
             if (ed != null) ed.layout();
-        }, 200);
+        }, 50);
         ed = monaco.editor.create(container.element, {
             value: `
 # Initialize 
@@ -477,7 +477,7 @@ lv.scr_load(scr)
                 } catch (e) {
                     console.error(e);
                 }
-            }, 200)
+            }, 50)
         );
         function xterm_helper(key) {
             function ESC(data) {
