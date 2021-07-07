@@ -1,4 +1,4 @@
-name: Build Javascript port (v8)
+name: Build Javascript v8 port
 env:
   EM_VERSION: 2.0.4
   EM_CACHE_FOLDER: 'emsdk-cache'

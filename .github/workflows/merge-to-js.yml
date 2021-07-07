@@ -18,15 +18,15 @@ jobs:
         run: exit 1
         if: steps.wait-for-build.outputs.conclusion == 'failure'
       - uses: actions/checkout@master
-      - name: Merge to lvgl_javascript branch
+      - name: Merge to lvgl_javascript_v8 branch
         uses: devmasx/merge-branch@v1.1.0
         with:
           type: now
-          target_branch: 'lvgl_javascript'
+          target_branch: 'lvgl_javascript_v8'
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Trigger Javascript port build
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: Build Javascript port
+          workflow: Build Javascript v8 port
           token: ${{ secrets.LVGL_BOT_TOKEN }}
