@@ -224,6 +224,14 @@ function getEditorValue() {
 function setEditorValue(val) {
     editor.setValue(val);
 }
+
+function getInitScript() {
+    return `
+import imp, usys as sys
+sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/${process.env.LV_BINDINGS_COMMIT_HASH}/lib')
+`;
+}
+
 /* END MONACO COMPAT */
 window.runScript = function () {
     var $this = $("#run-button");
@@ -234,7 +242,7 @@ window.runScript = function () {
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    iframe.setAttribute("data-cscript", LZString.compressToEncodedURIComponent(getEditorValue()));
+    iframe.setAttribute("data-cscript", LZString.compressToEncodedURIComponent(getInitScript() + "\n" + getEditorValue()));
 
     clear_iframe(iframe);
     iframe.src = "lvgl.html"; /*+ "&timestamp=" + new Date().getTime()*/
@@ -410,8 +418,6 @@ $(window).load(function () {
             value: `
 # Initialize 
 
-import imp, usys as sys
-sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/dev-8.0/lib')
 import display_driver
 import lvgl as lv
 
