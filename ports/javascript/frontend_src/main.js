@@ -228,6 +228,7 @@ function setEditorValue(val) {
 function getInitScript() {
     return `
 import imp, usys as sys
+sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/${process.env.LV_BINDINGS_COMMIT_HASH}/driver/js')
 sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/${process.env.LV_BINDINGS_COMMIT_HASH}/lib')
 `;
 }
