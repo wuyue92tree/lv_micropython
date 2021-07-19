@@ -448,19 +448,27 @@ lv.scr_load(scr)
         const canvas = document.createElement("canvas");
         canvas.setAttribute("id", "canvas");
         container.element.appendChild(canvas);
-        container.on("resize", () => {
-            const canvasW = 420;
-            const canvasH = 320;
-            console.log(container.width, container.height);
+        const resizeHandler = debounce(() => {
+            let canvasW = parseInt(canvas.getAttribute("width"));
+            let canvasH = parseInt(canvas.getAttribute("height"));
+            if(isNaN(canvasW) || isNaN(canvasH)) {
+                canvasW = 420;
+                canvasH = 320;
+            }
             let ratio = container.width / canvasW;
             if (canvasH * ratio > container.height) {
                 ratio = container.height / canvasH;
             }
             ratio = Math.min(ratio, 1);
-            console.log(ratio);
             canvas.style.width = Math.round(canvasW * ratio) + "px";
             canvas.style.height = Math.round(canvasH * ratio) + "px";
-        });
+        }, 50);
+        container.on("resize", resizeHandler);
+        const observer = new MutationObserver(resizeHandler);
+        
+        // call `observe()` on that MutationObserver instance,
+        // passing it the element to observe, and the options object
+        observer.observe(canvas, {attributes: true, attributeFilter: ["width", "height"]});
     });
 
     myLayout.registerComponentFactoryFunction("REPL", function (container, componentState) {
