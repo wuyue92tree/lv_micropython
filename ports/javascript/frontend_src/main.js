@@ -4,6 +4,7 @@ import "golden-layout/dist/css/themes/goldenlayout-dark-theme.css";
 import { GoldenLayout, LayoutConfig } from "golden-layout";
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
+import { WebLinksAddon } from 'xterm-addon-web-links';
 import "xterm/css/xterm.css";
 import "./styles.css";
 import debounce from "debounce";
@@ -483,6 +484,7 @@ lv.scr_load(scr)
         });
         const fitAddon = new FitAddon();
         term.loadAddon(fitAddon);
+        term.loadAddon(new WebLinksAddon());
         term.open(container.element);
         container.on(
             "resize",
