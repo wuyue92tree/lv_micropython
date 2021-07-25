@@ -226,14 +226,6 @@ function setEditorValue(val) {
     editor.setValue(val);
 }
 
-function getInitScript() {
-    return `
-import imp, usys as sys
-sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/${process.env.LV_BINDINGS_COMMIT_HASH}/driver/js')
-sys.path.append('https://raw.githubusercontent.com/littlevgl/lv_binding_micropython/${process.env.LV_BINDINGS_COMMIT_HASH}/lib')
-`;
-}
-
 /* END MONACO COMPAT */
 window.runScript = function () {
     var $this = $("#run-button");
@@ -244,7 +236,7 @@ window.runScript = function () {
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    iframe.setAttribute("data-cscript", LZString.compressToEncodedURIComponent(getInitScript() + "\n" + getEditorValue()));
+    iframe.setAttribute("data-cscript", LZString.compressToEncodedURIComponent(getEditorValue()));
 
     clear_iframe(iframe);
     iframe.src = "lvgl.html"; /*+ "&timestamp=" + new Date().getTime()*/
@@ -544,6 +536,7 @@ lv.scr_load(scr)
 
     iframe = document.getElementById("emscripten-iframe");
     iframe.src = "about:blank";
+    iframe.setAttribute("data-lv-bindings-commit-hash", process.env.LV_BINDINGS_COMMIT_HASH);
     iframe.contentWindow.location.href = iframe.src;
     clear_iframe(iframe);
     myLayout.loadLayout(layoutConfig);

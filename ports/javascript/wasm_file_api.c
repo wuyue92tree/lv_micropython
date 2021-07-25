@@ -12,6 +12,8 @@ int
 wasm_file_open(const char *url) {
     //fprintf(stderr,"10:wasm_file_open[%s]\n", url);
 
+    /* Skip same host lookups, we don't use them at LVGL */
+    /*
     if (strlen(url)>1 && url[0]==':') {
         fprintf(stderr,"wasm_file_open -> same host[%s]\n", url);
         int fidx = EM_ASM_INT({return window.wasm_file_open(UTF8ToString($0)); }, url );
@@ -22,6 +24,7 @@ wasm_file_open(const char *url) {
         snprintf(fname, sizeof(fname), "cache_%d", fidx);
         return fileno( fopen(fname,"r") );
     }
+    */
     /* treat everything else as a remote host */
     /*if ( (strlen(url)>6) && (url[4]==':' || url[5]==':') ) {*/
     fprintf(stderr,"wasm_file_open -> remote host[%s]\n", url);
