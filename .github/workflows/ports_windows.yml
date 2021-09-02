@@ -24,7 +24,8 @@ jobs:
         wget https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz
         tar xzf SDL2-devel-2.0.12-mingw.tar.gz SDL2-2.0.12/
         cd SDL2-2.0.12/
-        mkdir /usr/local/{i686,x86_64}-w64-mingw32
+        sudo mkdir /usr/local/i686-w64-mingw32
+        sudo mkdir /usr/local/x86_64-w64-mingw32
         sudo make cross
     - name: Build
       run: source tools/ci.sh && env CFLAGS_EXTRA="-I/usr/local/i686-w64-mingw32/include" LDFLAGS_EXTRA="-L/usr/local/i686-w64-mingw32/lib" ci_windows_build
