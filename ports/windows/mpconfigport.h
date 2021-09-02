@@ -129,7 +129,7 @@
 #define MICROPY_WARNINGS            (1)
 #define MICROPY_PY_STR_BYTES_CMP_WARN (1)
 //use large block for GC to increase speed of allocate, but consume more memory
-#define MICROPY_BYTES_PER_GC_BLOCK (64 * BYTES_PER_WORD)
+#define MICROPY_BYTES_PER_GC_BLOCK (64 * MP_BYTES_PER_OBJ_WORD)
 
 
 // VFS stat functions should return time values relative to 1970/1/1
