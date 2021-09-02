@@ -28,4 +28,7 @@ jobs:
         sudo mkdir /usr/local/x86_64-w64-mingw32
         sudo make cross
     - name: Build
-      run: source tools/ci.sh && env CFLAGS_EXTRA="-I/usr/local/i686-w64-mingw32/include" LDFLAGS_EXTRA="-L/usr/local/i686-w64-mingw32/lib" ci_windows_build
+      run: |
+        source tools/ci.sh
+        export CFLAGS_EXTRA="-I/usr/local/i686-w64-mingw32/include" LDFLAGS_EXTRA="-L/usr/local/i686-w64-mingw32/lib"
+        ci_windows_build
