@@ -27,6 +27,8 @@ jobs:
         sudo mkdir /usr/local/i686-w64-mingw32
         sudo mkdir /usr/local/x86_64-w64-mingw32
         sudo make cross
+    - name: Initialize lv_bindings submodule
+      run: git submodule update --init --recursive lib/lv_bindings
     - name: Update submodules
       run: make -C ports/windows submodules
     - name: Build mpy-cross
