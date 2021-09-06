@@ -76,6 +76,15 @@ Now you can build the JavaScript port.
 7. `make`
 8. Run an HTTP server that serves files from the current directory, and then browse to `/lvgl_editor.html` on the HTTP Server.
 
+### For Raspberry Pi Pico port
+
+This port uses [Micropython infrastructure for C modules](https://docs.micropython.org/en/latest/develop/cmodules.html#compiling-the-cmodule-into-micropython) and `USER_C_MODULES` must be given:
+
+```
+cd ports/rp2
+make USER_C_MODULES=../../lv_bindings/bindings.cmake
+```
+
 ## Super Simple Example
 
 First, LVGL needs to be imported and initialized
