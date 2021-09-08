@@ -38,11 +38,11 @@ LD = emcc
 CPP := emcc -x c -E -D__CPP__ -D__EMSCRIPTEN__
 
 
-SRC_LIB = $(addprefix lib/,\
-	utils/interrupt_char.c \
-	utils/stdout_helpers.c \
-	utils/pyexec.c \
-	mp-readline/readline.c \
+SRC_SHARED = $(addprefix shared/,\
+	runtime/interrupt_char.c \
+	runtime/stdout_helpers.c \
+	runtime/pyexec.c \
+	readline/readline.c \
 	)
 
 
@@ -83,12 +83,12 @@ SRC_C += $(SRC_MOD)
 SRC_QSTR += $(SRC_C) $(SRC_LIB) $(LIB_SRC_C)
 
 OBJ += $(PY_O)
-OBJ += $(addprefix $(BUILD)/, $(SRC_LIB:.c=.o))
+OBJ += $(addprefix $(BUILD)/, $(SRC_SHARED:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(LIB_SRC_C:.c=.o))
 
 JSFLAGS += -s ASYNCIFY -s 'ASYNCIFY_IMPORTS=["mp_js_sleep_with_intr"]' -s WASM=1 -s USE_SDL=2
-JSFLAGS += -s EXPORTED_FUNCTIONS="['_mp_js_init', '_mp_js_init_repl', '_mp_js_do_str', '_mp_js_process_char', '_mp_hal_get_interrupt_char', '_mp_sched_keyboard_interrupt', '_mp_handle_pending']" -s EXTRA_EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']" -s --memory-init-file 0 --js-library library.js
+JSFLAGS += -s EXPORTED_FUNCTIONS="['_mp_js_init', '_mp_js_init_repl', '_mp_js_do_str', '_mp_js_process_char', '_mp_hal_get_interrupt_char', '_mp_sched_keyboard_interrupt', '_mp_handle_pending']" -s EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']" -s --memory-init-file 0 --js-library library.js
 
 all: $(BUILD)/micropython.js
 
