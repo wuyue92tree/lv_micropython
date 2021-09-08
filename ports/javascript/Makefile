@@ -43,6 +43,7 @@ SRC_SHARED = $(addprefix shared/,\
 	runtime/stdout_helpers.c \
 	runtime/pyexec.c \
 	readline/readline.c \
+	timeutils/timeutils.c \
 	)
 
 
@@ -52,7 +53,6 @@ LIB_SRC_C = $(addprefix lib/,\
     lv_bindings/driver/SDL/SDL_mouse.c \
 	lv_bindings/driver/SDL/modSDL.c \
 	$(LIB_SRC_C_EXTRA) \
-	timeutils/timeutils.c \
 	)
 
 SRC_C = \
