@@ -24,9 +24,9 @@ INC += -I$(BUILD)
 #default debug options for browser debugger
 JSFLAGS ?= --source-map-base http://localhost:8000
 
-CFLAGS += -std=gnu99 -Wall -Werror -Wdouble-promotion -Wfloat-conversion
-CFLAGS += -O3 -DNDEBUG -g4
-LDFLAGS += -g4
+CFLAGS += -std=gnu99 -Wall -Wno-error -Wdouble-promotion -Wfloat-conversion
+CFLAGS += -O3 -DNDEBUG -gsource-map
+LDFLAGS += -gsource-map
 CFLAGS += $(INC)
 
 CFLAGS += -fdata-sections -ffunction-sections
