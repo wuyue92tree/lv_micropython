@@ -266,6 +266,11 @@ ifeq ($(RLOTTIE_AVAILABLE),0)
 	LDFLAGS_MOD += -lrlottie
 endif
 
+FREETYPE_AVAILABLE := $(shell echo 'void main(){}' | $(CC) -lfreetype -x c -o /dev/null - 2> /dev/null; echo $$?)
+ifeq ($(FREETYPE_AVAILABLE),0)
+	LDFLAGS_MOD += -lfreetype
+endif
+
 SRC_CXX += \
 	$(SRC_MOD_CXX)
 
