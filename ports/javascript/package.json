@@ -9,7 +9,8 @@
   "scripts": {
     "clean": "rm -rf bundle_out/* && ./build_workers.sh",
     "bundle": "mkdir -p bundle_out && env LV_BINDINGS_COMMIT_HASH=$(git -C ../../lib/lv_bindings rev-parse HEAD) parcel build frontend.html -o index.html -d parcel_bundle_out --no-source-maps --public-url ./ && mv parcel_bundle_out/* bundle_out && cp docs/wasm_file_api.js lvgl.html bundle_out/ && rm -rf parcel_bundle_out",
-    "dev": "parcel watch frontend.html -o index.html -d bundle_out --no-source-maps --public-url ./",
+    "dev": "env LV_BINDINGS_COMMIT_HASH=$(git -C ../../lib/lv_bindings rev-parse HEAD) parcel watch frontend.html -o index.html -d bundle_out --no-source-maps --public-url ./",
+    "serve": "live-server --watch=bundle_out",
     "build:wasm": "make -j4"
   },
   "repository": {

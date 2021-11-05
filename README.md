@@ -90,7 +90,12 @@ development and CI workflows are only being tested with Emscripten 2.0.31 at the
 1. Clean the output directory: `npm run clean`
 1. Build the frontend: `npm run bundle`
 1. Build the backend: `make -j $(nproc)`
-1. Run an HTTP server that serves files from `ports/javascript`, and then browse to `bundle_out/index.html` on the HTTP Server.
+1. Run `npm run serve` and the port should open in your browser.
+
+#### Hot reloading (for frontend devs)
+
+You can use `npm run dev` to spin up the bundler and have it watch files in the background. Note that the HTTP server is started separately using `npm run serve`, so you
+may need multiple terminal tabs.
 
 ### Raspberry Pi Pico port
 
