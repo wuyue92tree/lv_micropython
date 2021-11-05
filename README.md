@@ -61,25 +61,36 @@ For more details please refer to [Micropython ESP32 README](https://github.com/m
 
 ### JavaScript port
 
-It is *strongly* recommended to use Emscripten 1.38.31. Newer versions have issues with the `clang` executable, which
-the MicroPython build system relies on.
+This port consists of two components: an Emscripten-powered backend that runs MicroPython, and a JavaScript-based frontend that hosts the editor and manages the backend within an iframe.
 
-1. Install just the `emsdk` executable following the directions [here](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions).
-You do not need to run anything including and past `./emsdk install latest`.
-2. Run `./emsdk install fastcomp-clang-e1.38.31-64bit` to install Clang.
-3. Run `./emsdk install sdk-fastcomp-1.38.31-64bit` to install Emscripten SDK 1.38.31.
-4. Run `./emsdk activate sdk-fastcomp-1.38.31-64bit` to set 1.38.31 as the version to use.
+The following tools need to be installed for development:
+* Emscripten (see below)
+* Node.js (I use v14, however anything modern should work)
 
-Now you can build the JavaScript port.
+#### Installing Emscripten
+
+Visit the [Emscripten documentation](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions) for overall guidance on getting started, however, please note that
+development and CI workflows are only being tested with Emscripten 2.0.31 at the moment.
+
+1. Run `./emsdk install 2.0.31`.
+1. Run `./emsdk activate 2.0.31`.
+
+#### Building the port
 
 1. `cd <path to lv_micropython>`
-2. `source <path to emsdk>/emsdk_env.sh`
-3. `git checkout lvgl_javascript`
-4. `git submodule update --init --recursive` (*very important!*)
-5.  Build the MicroPython cross-compiler: `make -C mpy-cross`
-6. `cd ports/javascript`
-7. `make`
-8. Run an HTTP server that serves files from the current directory, and then browse to `/lvgl_editor.html` on the HTTP Server.
+1. `source <path to emsdk>/emsdk_env.sh`
+1. Ensure you've checked out the correct branch, as `master` contains the unchanged upstream JavaScript port: `git checkout lvgl_javascript_v8`
+1. Build the MicroPython cross-compiler: `make -C mpy-cross`
+1. `cd ports/javascript/scripts`
+1. Install FreeType for Emscripten: `./build_freetype.sh`
+1. Install Samsung's rlottie library for Emscripten: `./build_rlottie.sh`
+1. `cd ..`
+1. Fetch submodules: `make submodules`
+1. Install necessary Node.js packages: `npm install`
+1. Clean the output directory: `npm run clean`
+1. Build the frontend: `npm run bundle`
+1. Build the backend: `make -j $(nproc)`
+1. Run an HTTP server that serves files from `ports/javascript`, and then browse to `bundle_out/index.html` on the HTTP Server.
 
 ### Raspberry Pi Pico port
 

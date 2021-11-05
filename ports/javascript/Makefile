@@ -65,6 +65,14 @@ ifdef WASM_FILE_API
 	SRC_C += file.c wasm_file_api.c
 endif
 
+# FIXME: stop using a hardcoded path
+EMSCRIPTEN_SYSROOT := $(EMSDK)/upstream/emscripten/cache/sysroot
+LDFLAGS += -L$(EMSCRIPTEN_SYSROOT)/lib
+
+INC += -I$(EMSCRIPTEN_SYSROOT)/include/freetype2
+LDFLAGS += -lfreetype
+LDFLAGS += -lrlottie
+
 ifneq ($(FROZEN_DIR),)
 # To use frozen source modules, put your .py files in a subdirectory (eg scripts/)
 # and then invoke make with FROZEN_DIR=scripts (be sure to build from scratch).

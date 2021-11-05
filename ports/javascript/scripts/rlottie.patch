@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 38a9862..f789dfc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -107,10 +107,10 @@ if (NOT LOTTIE_ASAN)
+                                  "-Wl, -undefined error"
+                               )
+     elseif(NOT MSVC)
+-        target_link_libraries(rlottie
+-                            PUBLIC
+-                                 "-Wl,--no-undefined"
+-                              )
++#        target_link_libraries(rlottie
++#                            PUBLIC
++#                                 "-Wl,--no-undefined"
++#                              )
+     endif()
+ endif()
+ 
+@@ -149,8 +149,8 @@ SET(EXEC_DIR ${PREFIX})
+ SET(LIBDIR ${LIB_INSTALL_DIR})
+ SET(INCDIR ${PREFIX}/include)
+ 
+-CONFIGURE_FILE(${PROJECT_NAME}.pc.in ${PROJECT_NAME}.pc)
+-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
++#CONFIGURE_FILE(${PROJECT_NAME}.pc.in ${PROJECT_NAME}.pc)
++#INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+ 
+ 
+ #install header
