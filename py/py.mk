@@ -43,7 +43,7 @@ CFLAGS_MOD += $(LV_CFLAGS)
 $(LVGL_MPY): $(ALL_LVGL_SRC) $(LVGL_BINDING_DIR)/gen/gen_mpy.py 
 	$(ECHO) "LVGL-GEN $@"
 	$(Q)mkdir -p $(dir $@)
-	$(Q)$(CPP) $(LV_CFLAGS) -DPYCPARSER -x c -I $(LVGL_BINDING_DIR)/pycparser/utils/fake_libc_include $(INC) $(LVGL_DIR)/lvgl.h > $(LVGL_PP)
+	$(Q)$(CPP) $(CFLAGS_MOD) -DPYCPARSER -x c -I $(LVGL_BINDING_DIR)/pycparser/utils/fake_libc_include $(INC) $(LVGL_DIR)/lvgl.h > $(LVGL_PP)
 	$(Q)$(PYTHON) $(LVGL_BINDING_DIR)/gen/gen_mpy.py -M lvgl -MP lv -MD $(LVGL_MPY_METADATA) -E $(LVGL_PP) $(LVGL_DIR)/lvgl.h > $@
 
 .PHONY: LVGL_MPY
@@ -74,13 +74,6 @@ $(LODEPNG_C): $(LODEPNG_DIR)/lodepng.cpp $(LODEPNG_DIR)/*
 	cp $< $@
 
 SRC_MOD += $(subst $(TOP)/,,$(LODEPNG_C) $(MP_LODEPNG_C) $(LODEPNG_MODULE))
-
-# Additional optional libraries
-CFLAGS_MOD +=  $(shell pkg-config --silence-errors --cflags rlottie)
-LDFLAGS_MOD += $(shell pkg-config --silence-errors --libs   rlottie)
-
-CFLAGS_MOD +=  $(shell pkg-config --silence-errors --cflags freetype2)
-LDFLAGS_MOD += $(shell pkg-config --silence-errors --libs   freetype2)
 
 # External modules written in C.
 ifneq ($(USER_C_MODULES),)
