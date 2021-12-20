@@ -78,6 +78,7 @@ development and CI workflows are only being tested with Emscripten 2.0.31 at the
 #### Building the port
 
 1. `cd <path to lv_micropython>`
+1. `git submodule update --init --recursive lib/lv_bindings`
 1. `source <path to emsdk>/emsdk_env.sh`
 1. Ensure you've checked out the correct branch, as `master` contains the unchanged upstream JavaScript port: `git checkout lvgl_javascript_v8`
 1. Build the MicroPython cross-compiler: `make -C mpy-cross`
