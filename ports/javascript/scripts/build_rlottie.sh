@@ -1,6 +1,6 @@
 #!/bin/bash
 # Based on https://docs.lvgl.io/8.0/libs/rlottie.html
-SCRIPTSDIR="$(pwd)"
+SCRIPTSDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 cd /tmp
 rm -rf rlottie_workdir
 mkdir rlottie_workdir
