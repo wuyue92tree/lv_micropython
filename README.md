@@ -87,7 +87,9 @@ development and CI workflows are only being tested with Emscripten 2.0.31 at the
 1. Install Samsung's rlottie library for Emscripten: `./build_rlottie.sh`
 1. `cd ..`
 1. Fetch submodules: `make submodules`
-1. Install necessary Node.js packages: `npm install`
+1. Install necessary dependencies: `npm install`
+1. Install live-server: `npm install live-server`
+1. Build SDL2 (only needed once): `embuilder build sdl2`
 1. Clean the output directory: `npm run clean`
 1. Build the frontend: `npm run bundle`
 1. Build the backend: `make -j $(nproc)`
