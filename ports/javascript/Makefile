@@ -2,7 +2,7 @@ SHELL := /bin/bash
 $(info ************  lvgl_javascript version ************)
 # customizations for lvgl
 WASM_FILE_API = 1
-FROZEN_DIR ?= modules
+FROZEN_MANIFEST ?= manifest.py
 
 #LV_CFLAGS:= -DLV_FONT_CUSTOM_DECLARE="LV_FONT_DECLARE(lv_font_heb_16)"
 
@@ -73,17 +73,9 @@ INC += -I$(EMSCRIPTEN_SYSROOT)/include/freetype2
 LDFLAGS += -lfreetype
 LDFLAGS += -lrlottie
 
-ifneq ($(FROZEN_DIR),)
-# To use frozen source modules, put your .py files in a subdirectory (eg scripts/)
-# and then invoke make with FROZEN_DIR=scripts (be sure to build from scratch).
-CFLAGS += -DMICROPY_MODULE_FROZEN_STR
-endif
-
-ifneq ($(FROZEN_MPY_DIR),)
-# To use frozen bytecode, put your .py files in a subdirectory (eg frozen/) and
-# then invoke make with FROZEN_MPY_DIR=frozen (be sure to build from scratch).
-CFLAGS += -DMICROPY_QSTR_EXTRA_POOL=mp_qstr_frozen_const_pool
-CFLAGS += -DMICROPY_MODULE_FROZEN_MPY
+ifdef FROZEN_MANIFEST
+       CFLAGS += -DMICROPY_QSTR_EXTRA_POOL=mp_qstr_frozen_const_pool
+       CFLAGS += -DMICROPY_MODULE_FROZEN_STR -DMICROPY_MODULE_FROZEN_MPY -D MICROPY_FROZEN_MANIFEST=$(FROZEN_MANIFEST)
 endif
 
 SRC_C += $(SRC_MOD)
