@@ -59,6 +59,8 @@ GNUmakefile
 user.props
 ports/javascript/node_modules
 ports/javascript/*bundle_out
+.vscode/
+
 # Generated rst files
 ######################
 genrst/

@@ -37,7 +37,6 @@ LD = emcc
 # TODO: figure out why this hack is needed
 CPP := emcc -x c -E -D__CPP__ -D__EMSCRIPTEN__
 
-
 SRC_SHARED = $(addprefix shared/,\
 	runtime/interrupt_char.c \
 	runtime/stdout_helpers.c \
