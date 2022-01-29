@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 cd /tmp
+if [ -d ftbuild ]; then rm -r ftbuild; fi
 mkdir ftbuild
 cd ftbuild
 wget https://download.savannah.gnu.org/releases/freetype/freetype-2.11.0.tar.gz
