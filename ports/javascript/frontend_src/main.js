@@ -1,33 +1,14 @@
 import * as monaco from "monaco-editor/esm/vs/editor/editor.main.js";
-import "golden-layout/dist/css/goldenlayout-base.css";
-import "golden-layout/dist/css/themes/goldenlayout-dark-theme.css";
 import { GoldenLayout, LayoutConfig } from "golden-layout";
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { WebLinksAddon } from 'xterm-addon-web-links';
+import "./golden-layout.less";
 import "xterm/css/xterm.css";
 import "./styles.css";
 import debounce from "debounce";
 
 var total, final_script;
-
-self.MonacoEnvironment = {
-    getWorkerUrl: function (moduleId, label) {
-        if (label === "json") {
-            return "./json.worker.js";
-        }
-        if (label === "css") {
-            return "./css.worker.js";
-        }
-        if (label === "html") {
-            return "./html.worker.js";
-        }
-        if (label === "typescript" || label === "javascript") {
-            return "./ts.worker.js";
-        }
-        return "./editor.worker.js";
-    },
-};
 
 /**
  * Add or update a query string parameter. If no URI is given, we use the current
@@ -536,7 +517,7 @@ lv.scr_load(scr)
 
     iframe = document.getElementById("emscripten-iframe");
     iframe.src = "about:blank";
-    iframe.setAttribute("data-lv-bindings-commit-hash", process.env.LV_BINDINGS_COMMIT_HASH);
+    iframe.setAttribute("data-lv-bindings-commit-hash", LV_BINDINGS_COMMIT_HASH);
     iframe.contentWindow.location.href = iframe.src;
     clear_iframe(iframe);
     myLayout.loadLayout(layoutConfig);

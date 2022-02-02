@@ -67,7 +67,7 @@ This port consists of two components: an Emscripten-powered backend that runs Mi
 
 The following tools need to be installed for development:
 * Emscripten (see below)
-* Node.js (I use v14, however anything modern should work)
+* Node.js (I use v16, however anything modern should work)
 
 #### Installing Emscripten
 
@@ -90,17 +90,11 @@ development and CI workflows are only being tested with Emscripten 2.0.31 at the
 1. `cd ..`
 1. Fetch submodules: `make submodules`
 1. Install necessary dependencies: `npm install`
-1. Install live-server: `npm install live-server`
 1. Build SDL2 (only needed once): `embuilder build sdl2`
 1. Clean the output directory: `npm run clean`
-1. Build the frontend: `npm run bundle`
 1. Build the backend: `make -j $(nproc)`
-1. Run `npm run serve` and the port should open in your browser.
-
-#### Hot reloading (for frontend devs)
-
-You can use `npm run dev` to spin up the bundler and have it watch files in the background. Note that the HTTP server is started separately using `npm run serve`, so you
-may need multiple terminal tabs.
+1. Start the development server: `npm run dev`
+1. To build a production bundle: `npm run bundle`
 
 ### Raspberry Pi Pico port
 

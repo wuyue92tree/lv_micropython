@@ -95,10 +95,6 @@ $(BUILD)/micropython.js: $(OBJ) library.js wrapper.js
 	$(ECHO) "LINK $(BUILD)/firmware.js"
 	$(Q)emcc $(LDFLAGS) -o $(BUILD)/firmware.js $(OBJ) $(JSFLAGS)
 	cat wrapper.js $(BUILD)/firmware.js > $@
-	$(Q)mkdir -p $(BUILD)/../bundle_out
-	cp $@ $(BUILD)/../bundle_out/lvgl_mp.js
-	([ -e $(BUILD)/firmware.wasm ] && cp $(BUILD)/firmware.wasm $(BUILD)/../bundle_out/firmware.wasm); true
-	([ -e $(BUILD)/firmware.wasm.map ] && cp $(BUILD)/firmware.wasm.map $(BUILD)/../bundle_out/firmware.wasm.map); true
 
 min: $(BUILD)/micropython.js
 	uglifyjs $< -c -o $(BUILD)/micropython.min.js
