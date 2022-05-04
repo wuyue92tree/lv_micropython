@@ -24,9 +24,19 @@
  * THE SOFTWARE.
  */
 
-#define MICROPY_READER_VFS                      (1)
+// Set base feature level.
+#define MICROPY_CONFIG_ROM_LEVEL (MICROPY_CONFIG_ROM_LEVEL_EXTRA_FEATURES)
+
+// Disable some features that come enabled by default with the feature level.
+#define MICROPY_MODULE_BUILTIN_INIT             (0)
+#define MICROPY_PY_BUILTINS_EXECFILE            (0)
+#define MICROPY_PY_SYS_STDIO_BUFFER             (0)
+#define MICROPY_PY_USELECT                      (0)
+
+// Enable some additional features.
 #define MICROPY_REPL_EMACS_WORDS_MOVE           (1)
 #define MICROPY_REPL_EMACS_EXTRA_WORDS_MOVE     (1)
+<<<<<<< HEAD
 #define MICROPY_ENABLE_SCHEDULER                (1)
 #define MICROPY_VFS                             (1)
 #define MICROPY_VFS_POSIX                       (1)
@@ -45,3 +55,6 @@
 #define mp_import_stat mp_vfs_import_stat
 #define mp_builtin_open mp_vfs_open
 #define mp_builtin_open_obj mp_vfs_open_obj
+=======
+#define MICROPY_PY_SYS_SETTRACE                 (1)
+>>>>>>> upm
